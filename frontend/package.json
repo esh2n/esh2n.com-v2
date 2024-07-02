@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "format": "turbo run format",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "turbo": "^2.0.6",
+    "@biomejs/biome": "^1.8.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "workspaces": ["packages/*", "src/*"],
+  "packageManager": "bun@1.1.17",
+  "dependencies": {
+    "lefthook": "^1.6.18"
+  }
+}

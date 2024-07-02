@@ -1,0 +1,24 @@
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.{tsx,ts,mts,yml,yaml}"
+      run: cd ./frontend &&  bun run format {staged_files}
+      stage_fixed: true
+      skip:
+        - merge
+        - rebase
+    lint:
+      glob: "*.{tsx,ts,mts,yml,yaml}"
+      run: cd ./frontend && bun run lint {staged_files}
+      stage_fixed: true
+      skip:
+        - merge
+        - rebase
+    build:
+      glob: "*.{tsx,ts,mts,yml,yaml}"
+      run: cd ./frontend && bun run build
+      stage_fixed: true
+      skip:
+        - merge
+        - rebase
