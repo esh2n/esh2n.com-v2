@@ -5,11 +5,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@esh2n.com/ui example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
     <script type="module" src="./dist/index.js"></script>
 </head>
 
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    ai-chat-ui {
+        --ai-chat-font-family: 'Roboto', sans-serif;
+        --ai-chat-background-color: #f5f5f5;
+        --ai-chat-text-color: #333333;
+        --ai-chat-border-color: #e0e0e0;
+        --ai-chat-border-radius: 12px;
+        --ai-chat-header-bg-color: #4a90e2;
+        --ai-chat-user-message-bg-color: #4caf50;
+        --ai-chat-ai-message-bg-color: #ffffff;
+        --ai-chat-button-bg-color: #4a90e2;
+    }
+</style>
+
 <body>
-    <ai-chat name="John" />
+    <ai-chat name="John" buttonIcon="\f1d8" />
 </body>
 
 </html>
