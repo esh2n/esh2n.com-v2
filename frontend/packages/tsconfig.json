@@ -28,7 +28,7 @@
     "useDefineForClassFields": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "./types"
+    "declarationDir": "./dist"
   },
 
   // Storybook

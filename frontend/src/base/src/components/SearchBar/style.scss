@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .command {
+        --tw-border-opacity: 1;
+        border-color: rgb(var(--border) / var(--tw-border-opacity));
+    }
+
+    .command-input {
+        --tw-bg-opacity: 1;
+        background-color: rgb(var(--input) / var(--tw-bg-opacity));
+    }
+}
+
+@tailwind utilities;

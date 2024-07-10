@@ -1,0 +1,96 @@
+@tailwind base;
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--color);
+  }
+
+  :root {
+    --background: #ffffff;
+    --foreground: #1b1f23;
+    --card: #ffffff;
+    --card-foreground: #1b1f23;
+    --popover: #ffffff;
+    --popover-foreground: #1b1f23;
+    --primary: #0d1117;
+    --primary-foreground: #d1d5da;
+    --secondary: #d1d5da;
+    --secondary-foreground: #0d1117;
+    --muted: #d1d5da;
+    --muted-foreground: #6e7681;
+    --accent: #d1d5da;
+    --accent-foreground: #0d1117;
+    --destructive: #d73a49;
+    --destructive-foreground: #d1d5da;
+    --border: #e1e4e8;
+    --input: #e1e4e8;
+    --ring: #1b1f23;
+    --radius: 0.5rem;
+  }
+
+  .nord {
+    --background: #2E3440;
+    --foreground: #ECEFF4;
+    --card: #3B4252;
+    --card-foreground: #ECEFF4;
+    --popover: #434C5E;
+    --popover-foreground: #ECEFF4;
+    --primary: #81A1C1;
+    --primary-foreground: #ECEFF4;
+    --secondary: #88C0D0;
+    --secondary-foreground: #2E3440;
+    --muted: #4C566A;
+    --muted-foreground: #D8DEE9;
+    --accent: #8FBCBB;
+    --accent-foreground: #2E3440;
+    --destructive: #BF616A;
+    --destructive-foreground: #ECEFF4;
+    --border: #3B4252;
+    --input: #434C5E;
+    --ring: #5E81AC;
+    --radius: 0.5rem;
+  }
+
+  .nord-light {
+    --background: #ECEFF4;
+    --foreground: #2E3440;
+    --card: #D8DEE9;
+    --card-foreground: #2E3440;
+    --popover: #E5E9F0;
+    --popover-foreground: #2E3440;
+    --primary: #5E81AC;
+    --primary-foreground: #ECEFF4;
+    --secondary: #81A1C1;
+    --secondary-foreground: #2E3440;
+    --muted: #D8DEE9;
+    --muted-foreground: #4C566A;
+    --accent: #88C0D0;
+    --accent-foreground: #2E3440;
+    --destructive: #BF616A;
+    --destructive-foreground: #ECEFF4;
+    --border: #D8DEE9;
+    --input: #E5E9F0;
+    --ring: #81A1C1;
+    --radius: 0.5rem;
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
+
+// @layer base {
+//   * {
+//     @apply tw-border-border;
+//   }
+
+//   body {
+//     @apply tw-bg-background tw-text-foreground;
+//   }
+// }
+
+// @layer utilities {
+//   .text-balance {
+//     text-wrap: balance;
+//   }
+// }

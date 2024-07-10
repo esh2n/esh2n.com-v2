@@ -1,14 +1,14 @@
 {
   "name": "@esh2n.com/ui",
-  "version": "0.0.1",
-  "main": "dist/assets/index.js",
-  "module": "dist/assets/index.js",
+  "version": "0.0.9",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build && tsc",
     "dev": "vite dev",
     "preview": "vite preview",
-    "publish": "bun run build && bun publish --access public",
+    "publish": "npm publish --access public",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "format": "biome format --write ."

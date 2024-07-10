@@ -1,48 +1,48 @@
-import {LitElement, css, html, unsafeCSS} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
-import { repeat } from 'lit/directives/repeat.js';
+import { LitElement, css, html, unsafeCSS } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 
 interface Message {
-  id: number;
-  text: string;
-  sender: 'user' | 'ai';
-  isContinuous?: boolean;
+	id: number;
+	text: string;
+	sender: "user" | "ai";
+	isContinuous?: boolean;
 }
 
 @customElement("ai-chat")
 export class AIChat extends LitElement {
-  static styles = css`
+	static styles = css`
 
     /* Default Theme */
     :host {
         /* Foundation */
         --ai-chat-font-family: 'Roboto', sans-serif;
-        --ai-chat-background-color: #2E343F;
-        --ai-chat-text-color: #EEEEEF;
-        --ai-chat-border-color: #373E4D;
+        --ai-chat-background-color: #2E3440;
+        --ai-chat-text-color: #ECEFF4;
+        --ai-chat-border-color: #3b4252;
         --ai-chat-border-radius: 12px;
 
         /* Header */
-        --ai-chat-header-bg-color: #2E343F;
+        --ai-chat-header-bg-color: #2E3440;
         --ai-chat-header-font-size: 10px;
-        --ai-chat-header-text-color: #EEEEEF;
+        --ai-chat-header-text-color: #ECEFF4;
         --ai-chat-header-icon: '\\f075';  /* FontAwesome comment icon */
 
         /* Message */
         --ai-chat-message-font-size: 12px;
         --ai-chat-message-border-radius: 20px;
-        --ai-chat-user-message-bg-color: #3B4251;
-        --ai-chat-user-message-text-color: #EEEEEF;
-        --ai-chat-ai-message-bg-color: #2E343F;
-        --ai-chat-ai-message-text-color: #EEEEEF;
+        --ai-chat-user-message-bg-color: #3B4252;
+        --ai-chat-user-message-text-color: #ECEFF4;
+        --ai-chat-ai-message-bg-color: #2E3440;
+        --ai-chat-ai-message-text-color: #ECEFF4;
         --ai-chat-ai-icon: '\\f544';  /* FontAwesome robot icon */
         --ai-chat-ai-icon-bg-color: #88C0D0;
-        --ai-chat-ai-icon-text-color: #2E343F;
+        --ai-chat-ai-icon-text-color: #2E3440;
 
         /* Input */
-        --ai-chat-input-field-bg-color: #3B4251;
-        --ai-chat-input-placeholder-color: #EEEEEF;
-        --ai-chat-input-border-color: #3B4251;
+        --ai-chat-input-field-bg-color: #3B4252;
+        --ai-chat-input-placeholder-color: #ECEFF4;
+        --ai-chat-input-border-color: #3B4252;
         --ai-chat-input-border-radius: 20px;
         --ai-chat-input-field-font-size: 14px;
 
@@ -50,7 +50,7 @@ export class AIChat extends LitElement {
         --ai-chat-button-bg-color: #88C0D0;
         --ai-chat-button-icon: '\\f1d8';  /* Default to FontAwesome paper plane icon */
         --ai-chat-icon-font-family: 'Font Awesome 6 Free';
-        --ai-chat-button-text-color: #2E343F;
+        --ai-chat-button-text-color: #2E3440;
     }
 
     /* Foundation (reset and base styles) */
@@ -230,40 +230,49 @@ export class AIChat extends LitElement {
     }
   `;
 
-  @property({type: String})
-  headerTxt = "AI Chat";
+	constructor() {
+		super();
+		const fontEl = document.createElement("link");
+		fontEl.rel = "stylesheet";
+		fontEl.href = "https://use.fontawesome.com/releases/v6.2.0/css/all.css";
+		document.head.appendChild(fontEl);
+	}
 
-  @property({type: String})
-  inputPlaceholder = "メッセージを入力...";
+	@property({ type: String })
+	headerTxt = "AI Chat";
 
-  @property({type: String})
-  inputMessage= '';
+	@property({ type: String })
+	inputPlaceholder = "メッセージを入力...";
 
-  @property({type: Array})
-  messages: Message[] = [];
+	@property({ type: String })
+	inputMessage = "";
 
-  @property({type: String})
-  buttonIcon = '\\f1d8';  // Default FontAwesome paper plane icon
+	@property({ type: Array })
+	messages: Message[] = [];
 
-  @property({type: String})
-  iconFontFamily = 'Font Awesome 5 Free';
+	@property({ type: String })
+	buttonIcon = "\\f1d8"; // Default FontAwesome paper plane icon
 
-  render() {
-    return html`
+	render() {
+		return html`
       <div class="l-chat">
         <header class="c-header">
           <span class="c-header__icon"></span>
           ${this.headerTxt}
         </header>
         <div class="l-chat__messages">
-          ${repeat(this.messages, (message) => message.id, (message) => html`
-            <div class="c-message ${message.sender === 'user' ? 'p-chat__message--user' : 'p-chat__message--ai'} ${message.isContinuous ? 'u-continuous' : ''}">
-                ${message.sender === 'ai' ? html`<span class="c-message__icon ${message.isContinuous ? 'u-continuous' : ''}"></span>` : ''}
-              <div class="c-message__content ${message.sender === 'ai' ? 'u-ai' : ''}">
+          ${repeat(
+						this.messages,
+						(message) => message.id,
+						(message) => html`
+            <div class="c-message ${message.sender === "user" ? "p-chat__message--user" : "p-chat__message--ai"} ${message.isContinuous ? "u-continuous" : ""}">
+                ${message.sender === "ai" ? html`<span class="c-message__icon ${message.isContinuous ? "u-continuous" : ""}"></span>` : ""}
+              <div class="c-message__content ${message.sender === "ai" ? "u-ai" : ""}">
                 ${message.text}
               </div>
             </div>
-          `)}
+          `,
+					)}
         </div>
         <div class="l-chat__input">
           <div class="c-input">
@@ -282,43 +291,56 @@ export class AIChat extends LitElement {
         </div>
       </div>
     `;
-  }
+	}
 
-  updated(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('buttonIcon') || changedProperties.has('iconFontFamily')) {
-      this.style.setProperty('--ai-chat-button-icon', `'${this.buttonIcon}'`);
-      this.style.setProperty('--ai-chat-icon-font-family', this.iconFontFamily);
-    }
-  }
+	updated(changedProperties: Map<string, unknown>) {
+		if (changedProperties.has("buttonIcon")) {
+			this.style.setProperty("--ai-chat-button-icon", `'${this.buttonIcon}'`);
+		}
+	}
 
-  private handleInput(e: InputEvent) {
-    const target = e.target as HTMLInputElement;
-    this.inputMessage = target.value;
-  }
+	private handleInput(e: InputEvent) {
+		const target = e.target as HTMLInputElement;
+		this.inputMessage = target.value;
+	}
 
-  private handleKeyUp(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      this.sendMessage();
-    }
-  }
+	private handleKeyUp(e: KeyboardEvent) {
+		if (e.key === "Enter") {
+			this.sendMessage();
+		}
+	}
 
-  private sendMessage() {
-    if (this.inputMessage.trim() !== '') {
-      this.messages = [...this.messages, { id: Date.now(), text: this.inputMessage, sender: 'user' }];
-      this.inputMessage = '';
-      if (this.messages.length > 1 && this.messages[this.messages.length - 1].sender === this.messages[this.messages.length - 2].sender) {
-        this.messages[this.messages.length - 1].isContinuous = true;
-      }
-      this.requestUpdate();
+	private sendMessage() {
+		if (this.inputMessage.trim() !== "") {
+			this.messages = [
+				...this.messages,
+				{ id: Date.now(), text: this.inputMessage, sender: "user" },
+			];
+			this.inputMessage = "";
+			if (
+				this.messages.length > 1 &&
+				this.messages[this.messages.length - 1].sender ===
+					this.messages[this.messages.length - 2].sender
+			) {
+				this.messages[this.messages.length - 1].isContinuous = true;
+			}
+			this.requestUpdate();
 
-      // AIの応答をシミュレート
-      setTimeout(() => {
-        this.messages = [...this.messages, { id: Date.now(), text: 'AIからの応答例です。', sender: 'ai' }];
-        if (this.messages.length > 1 && this.messages[this.messages.length - 1].sender === this.messages[this.messages.length - 2].sender) {
-          this.messages[this.messages.length - 1].isContinuous = true;
-        }
-        this.requestUpdate();
-      }, 1000);
-    }
-  }
+			// AIの応答をシミュレート
+			setTimeout(() => {
+				this.messages = [
+					...this.messages,
+					{ id: Date.now(), text: "AIからの応答例です。", sender: "ai" },
+				];
+				if (
+					this.messages.length > 1 &&
+					this.messages[this.messages.length - 1].sender ===
+						this.messages[this.messages.length - 2].sender
+				) {
+					this.messages[this.messages.length - 1].isContinuous = true;
+				}
+				this.requestUpdate();
+			}, 1000);
+		}
+	}
 }
