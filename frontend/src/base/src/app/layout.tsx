@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Fira_Code } from "next/font/google";
 import "./globals.scss";
+import Header from "@/components/layouts/Header/Header";
+import RecoilProvider from "./recoilProvider";
 
 const inter = Fira_Code({ subsets: ["latin"] });
 
@@ -15,8 +17,13 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="ja" className="nord-light">
-			<body className={inter.className}>{children}</body>
+		<html lang="ja">
+			<body className={inter.className}>
+				<RecoilProvider>
+					<Header />
+					{children}
+				</RecoilProvider>
+			</body>
 		</html>
 	);
 }

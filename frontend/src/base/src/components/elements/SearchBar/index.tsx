@@ -1,14 +1,6 @@
 "use client";
 
-import {
-	Book,
-	Calculator,
-	Calendar,
-	History,
-	Settings,
-	Smile,
-	User,
-} from "lucide-react";
+import { Book, History, User } from "lucide-react";
 
 import {
 	Command,
@@ -50,7 +42,7 @@ export default function SearchBar() {
 
 	return (
 		<Command
-			className="command tw-rounded-l "
+			className="command tw-rounded-l tw-max-w-[600px]"
 			shouldFilter={false}
 			value={selected}
 			onKeyDown={handleKeyDown}

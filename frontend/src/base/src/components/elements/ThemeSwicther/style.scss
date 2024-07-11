@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .icon-sun {
+        --tw-text-opacity: 1;
+        color: var(--destructive-secondary);
+        opacity: --tw-text-opacity;
+    }
+
+    .icon-moon {
+        --tw-text-opacity: 1;
+        color: var(--ring);
+        opacity: --tw-text-opacity;
+    }
+}
+
+@tailwind utilities;

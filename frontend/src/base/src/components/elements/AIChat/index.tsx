@@ -12,7 +12,7 @@ export default function AIChat() {
 	});
 
 	return (
-		<div className="tw-max-w-[400px]">
+		<div className="tw-max-w-[600px] tw-h-full">
 			<ai-chat
 				headerTxt="もしかしてこのサイト、ターミナルが出せる...?"
 				inputPlaceholder="得意な言語は？"
