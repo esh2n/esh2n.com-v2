@@ -84,20 +84,12 @@
 }
 
 @tailwind components;
+
+@layer components {
+  .content {
+    @apply tw-w-full tw-h-full tw-bg-background;
+    color: var(--foreground);
+  }
+}
+
 @tailwind utilities;
-
-// @layer base {
-//   * {
-//     @apply tw-border-border;
-//   }
-
-//   body {
-//     @apply tw-bg-background tw-text-foreground;
-//   }
-// }
-
-// @layer utilities {
-//   .text-balance {
-//     text-wrap: balance;
-//   }
-// }

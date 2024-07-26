@@ -1,37 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 
-ai-chat {
-    --ai-chat-font-family: 'Fira Code', sans-serif;
-    /* Foundation */
-    --ai-chat-background-color: var(--background);
-    --ai-chat-text-color: var(--popover-foreground);
-    --ai-chat-border-color: var(--border);
-    --ai-chat-border-radius: 12px;
+@layer components {
+    ai-chat {
+        --ai-chat-font-family: 'Fira Code', sans-serif;
+        /* Foundation */
+        --ai-chat-background-color: var(--background);
+        --ai-chat-text-color: var(--popover-foreground);
+        --ai-chat-border-color: var(--border);
+        --ai-chat-border-radius: 0px;
 
-    /* Header */
-    --ai-chat-header-bg-color: var(--background);
-    --ai-chat-header-font-size: 10px;
-    --ai-chat-header-text-color: var(--foreground);
+        /* Header */
+        --ai-chat-header-bg-color: var(--background);
+        --ai-chat-header-font-size: 10px;
+        --ai-chat-header-text-color: var(--foreground);
 
-    /* Message */
-    --ai-chat-message-font-size: 12px;
-    --ai-chat-message-border-radius: 20px;
-    --ai-chat-user-message-bg-color: var(--card);
-    --ai-chat-user-message-text-color: var(--foreground);
-    --ai-chat-ai-message-bg-color: var(--background);
-    --ai-chat-ai-message-text-color: var(--foreground);
-    --ai-chat-ai-icon-bg-color: var(--secondary);
-    --ai-chat-ai-icon-text-color: var(--secondary-foreground);
+        /* Message */
+        --ai-chat-message-font-size: 12px;
+        --ai-chat-message-border-radius: 20px;
+        --ai-chat-user-message-bg-color: var(--card);
+        --ai-chat-user-message-text-color: var(--foreground);
+        --ai-chat-ai-message-bg-color: var(--background);
+        --ai-chat-ai-message-text-color: var(--foreground);
+        --ai-chat-ai-icon-bg-color: var(--secondary);
+        --ai-chat-ai-icon-text-color: var(--secondary-foreground);
 
-    /* Input */
-    --ai-chat-input-field-bg-color: var(--border);
-    --ai-chat-input-placeholder-color: var(--foreground);
-    --ai-chat-input-border-color: var(--border);
-    --ai-chat-input-border-radius: 20px;
-    --ai-chat-input-field-font-size: 14px;
+        /* Input */
+        --ai-chat-input-field-bg-color: var(--border);
+        --ai-chat-input-placeholder-color: var(--foreground);
+        --ai-chat-input-border-color: var(--border);
+        --ai-chat-input-border-radius: 20px;
+        --ai-chat-input-field-font-size: 14px;
 
-    /* Button */
-    --ai-chat-button-bg-color: var(--secondary);
+        /* Button */
+        --ai-chat-button-bg-color: var(--secondary);
+
+        @apply tw-h-full
+    }
+
 }

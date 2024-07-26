@@ -11,6 +11,11 @@
         --tw-bg-opacity: 1;
         background-color: rgb(var(--input) / var(--tw-bg-opacity));
     }
+
+    .command-list {
+        border: 1px solid var(--border);
+    }
+
 }
 
 @tailwind utilities;

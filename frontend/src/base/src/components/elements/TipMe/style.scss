@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+
+
+
+@layer components {
+    .tip-button {
+        --tw-text-opacity: 1;
+        background-color: var(--secondary) !important;
+        opacity: --tw-text-opacity;
+    }
+
+    .title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--foreground);
+
+    }
+
+
+
+    path:first-child {
+        fill: var(--card);
+    }
+
+    path:last-child {
+        fill: var(--foreground);
+    }
+}
+
+@tailwind utilities;

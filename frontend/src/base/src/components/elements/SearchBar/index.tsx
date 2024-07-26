@@ -1,7 +1,5 @@
 "use client";
 
-import { Book, History, User } from "lucide-react";
-
 import {
 	Command,
 	CommandEmpty,
@@ -12,6 +10,7 @@ import {
 	CommandSeparator,
 	CommandShortcut,
 } from "@/components/ui/command";
+import { Book, History, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./style.scss";
 
@@ -41,71 +40,78 @@ export default function SearchBar() {
 	}, [inputText]);
 
 	return (
-		<Command
-			className="command tw-rounded-l tw-max-w-[600px]"
-			shouldFilter={false}
-			value={selected}
-			onKeyDown={handleKeyDown}
-		>
-			<CommandInput
-				className="command-input"
-				placeholder="Type a command or search..."
-				value={inputText}
-				onValueChange={(text) => {
-					setInputText(text);
-					if (selected) {
-						setSelected(undefined);
-					}
-				}}
-				onBlur={() => {
-					setOpen(false);
-				}}
-				onFocus={() => {
-					setOpen(true);
-					inputRef.current?.select();
-				}}
-			/>
-			{open && (
-				<CommandList>
-					<CommandEmpty>No results found.</CommandEmpty>
-					{searchResults?.length > 0 && (
-						<CommandGroup heading="Suggestions">
-							{searchResults?.map((v, i) => (
-								<CommandItem
-									onSelect={() => {
-										setSelected(v);
-										setInputText(v);
-									}}
-									value={v}
-									key={v}
-								>
-									<Book className="tw-mr-2 tw-h-4 tw-w-4" />
-									<span>{v}</span>
-									<CommandShortcut>⌘{i}</CommandShortcut>
-								</CommandItem>
-							))}
-						</CommandGroup>
-					)}
-					<CommandSeparator />
-					<CommandGroup heading="Pages">
-						<CommandItem>
-							<User className="tw-mr-2 tw-h-4 tw-w-4" />
-							<span>About me</span>
-							<CommandShortcut>⌘A</CommandShortcut>
-						</CommandItem>
-						<CommandItem>
-							<Book className="tw-mr-2 tw-h-4 tw-w-4" />
-							<span>Blogs</span>
-							<CommandShortcut>⌘S</CommandShortcut>
-						</CommandItem>
-						<CommandItem>
-							<History className="tw-mr-2 tw-h-4 tw-w-4" />
-							<span>Resume</span>
-							<CommandShortcut>⌘B</CommandShortcut>
-						</CommandItem>
-					</CommandGroup>
-				</CommandList>
-			)}
-		</Command>
+		<div className="tw-relative tw-w-full tw-max-w-[600px]">
+			<Command
+				className="command tw-rounded-l tw-w-full"
+				shouldFilter={false}
+				value={selected}
+				onKeyDown={handleKeyDown}
+			>
+				<CommandInput
+					ref={inputRef}
+					className="command-input tw-w-full"
+					placeholder="Type a command or search..."
+					value={inputText}
+					onValueChange={(text) => {
+						setInputText(text);
+						if (selected) {
+							setSelected(undefined);
+						}
+					}}
+					onBlur={() => {
+						setOpen(false);
+					}}
+					onFocus={() => {
+						setOpen(true);
+						inputRef.current?.select();
+					}}
+				/>
+				{open && (
+					<div className="tw-absolute tw-left-0 tw-right-0 tw-top-full tw-mt-1 tw-w-full">
+						<div className="command-list tw-bg-white tw-rounded-md tw-shadow-lg tw-w-full">
+							<CommandList>
+								<CommandEmpty>No results found.</CommandEmpty>
+								{searchResults?.length > 0 && (
+									<CommandGroup heading="Suggestions">
+										{searchResults?.map((v, i) => (
+											<CommandItem
+												onSelect={() => {
+													setSelected(v);
+													setInputText(v);
+												}}
+												value={v}
+												key={v}
+											>
+												<Book className="tw-mr-2 tw-h-4 tw-w-4" />
+												<span>{v}</span>
+												<CommandShortcut>⌘{i}</CommandShortcut>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								)}
+								<CommandSeparator />
+								<CommandGroup heading="Pages">
+									<CommandItem>
+										<User className="tw-mr-2 tw-h-4 tw-w-4" />
+										<span>About me</span>
+										<CommandShortcut>⌘A</CommandShortcut>
+									</CommandItem>
+									<CommandItem>
+										<Book className="tw-mr-2 tw-h-4 tw-w-4" />
+										<span>Blogs</span>
+										<CommandShortcut>⌘S</CommandShortcut>
+									</CommandItem>
+									<CommandItem>
+										<History className="tw-mr-2 tw-h-4 tw-w-4" />
+										<span>Resume</span>
+										<CommandShortcut>⌘B</CommandShortcut>
+									</CommandItem>
+								</CommandGroup>
+							</CommandList>
+						</div>
+					</div>
+				)}
+			</Command>
+		</div>
 	);
 }

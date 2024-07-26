@@ -1,38 +1,56 @@
 "use client";
 import { themeState } from "@/atoms/themeState";
 import { Switch } from "@/components/ui/switch";
+import type { ThemeState } from "@/types/atoms";
 import { Moon, Sun } from "lucide-react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 
 import "./style.scss";
 
-export default function ThemeSwitcher() {
-	const [theme, setTheme] = useRecoilState(themeState);
+export default function ThemeSwitcher(): JSX.Element {
+	const [theme, setTheme] = useRecoilState<ThemeState>(themeState);
 	const isDarkMode = theme.isDarkMode;
+	const initialRenderRef = useRef(true);
+
+	const applyTheme = useCallback((currentTheme: ThemeState): void => {
+		const themeName = currentTheme.theme;
+		const className = `${themeName}${currentTheme.isDarkMode ? "" : "-light"}`;
+		const classList = Array.from(document.documentElement.classList);
+		for (const cls of classList) {
+			if (cls.startsWith(themeName) || cls.endsWith("-light")) {
+				document.documentElement.classList.remove(cls);
+			}
+		}
+		document.documentElement.classList.add(className);
+	}, []);
 
 	useEffect(() => {
-		const themeName = theme.theme;
-		const className = `${themeName}${isDarkMode ? "" : "-light"}`;
-		document.documentElement.classList.add(className);
-	});
-
-	const toggleMode = () => {
-		const isDarkMode = !theme.isDarkMode;
-		setTheme({ ...theme, isDarkMode });
-
-		const themeName = theme.theme;
-		const darkClassName = `${themeName}`;
-		const lightClassName = `${themeName}-light`;
-
-		if (isDarkMode) {
-			document.documentElement.classList.remove(lightClassName);
-			document.documentElement.classList.add(darkClassName);
+		if (initialRenderRef.current) {
+			initialRenderRef.current = false;
+			// Load theme from localStorage on initial render
+			const savedTheme = localStorage.getItem("theme");
+			if (savedTheme) {
+				const parsedTheme = JSON.parse(savedTheme) as ThemeState;
+				setTheme(parsedTheme);
+			} else {
+				// If no saved theme, save the current theme to localStorage
+				localStorage.setItem("theme", JSON.stringify(theme));
+			}
 		} else {
-			document.documentElement.classList.remove(darkClassName);
-			document.documentElement.classList.add(lightClassName);
+			// Save theme to localStorage on subsequent renders
+			localStorage.setItem("theme", JSON.stringify(theme));
 		}
-	};
+		// Apply theme on every render
+		applyTheme(theme);
+	}, [theme, setTheme, applyTheme]);
+
+	const toggleMode = useCallback((): void => {
+		setTheme((prevTheme) => ({
+			...prevTheme,
+			isDarkMode: !prevTheme.isDarkMode,
+		}));
+	}, [setTheme]);
 
 	return (
 		<div className="tw-flex tw-items-center tw-space-x-1">

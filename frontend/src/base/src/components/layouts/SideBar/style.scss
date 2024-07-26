@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .vscode-sidebar {
+        border-right: 1px solid var(--border);
+        color: var(--foreground);
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .highlight-bg {
+        background-color: var(--muted);
+    }
+}
+
+@tailwind utilities;

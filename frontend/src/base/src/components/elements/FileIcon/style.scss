@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .colored-icon svg path {
+        fill: currentColor;
+    }
+}
+
+@tailwind utilities;

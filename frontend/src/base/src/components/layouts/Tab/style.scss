@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .vscode-tab {
+        color: var(--foreground);
+    }
+
+    .colored-icon svg path {
+        fill: currentColor;
+    }
+
+    .highlight-bg {
+        background-color: var(--muted);
+    }
+
+    .highlight-bg-hover:hover {
+        background-color: var(--muted-hover);
+    }
+
+}
+
+@tailwind utilities;
