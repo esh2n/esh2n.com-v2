@@ -1,16 +1,21 @@
 import { atom } from "recoil";
 
-export const activeCodeTabState = atom<string | null>({
-	key: "activeCodeTabState",
-	default: null,
+export const activeTabState = atom<ActiveTab>({
+	key: "activeTabState",
+	default: {
+		path: null,
+		label: null,
+		isCode: false,
+	},
 });
 
-export const tabsState = atom<Array<{ path: string; label: string }>>({
-	key: "tabsState",
-	default: [],
-});
+export type ActiveTab = {
+	path: string | null;
+	label: Label | null;
+	isCode: boolean;
+};
 
-export const codeTabsState = atom<Array<{ path: string; label: string }>>({
-	key: "codeTabsState",
-	default: [],
-});
+type Label = {
+	page: string;
+	code: string;
+};
