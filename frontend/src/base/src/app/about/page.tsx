@@ -1,28 +1,32 @@
 "use client";
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { SiZenn } from "react-icons/si";
+import "./style.scss";
 
 const AboutPage: React.FC = () => {
 	return (
-		<section id="about" className="about-section">
-			<div className="container">
-				<motion.h2
-					className="section-title"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5 }}
-				>
-					<span className="emoji">👦</span>About me.
-				</motion.h2>
+		<div className="tw-w-full tw-overflow-x-hidden">
+			<section id="about" className="about-section">
+				<div className="container">
+					<motion.h2
+						className="section-title"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5 }}
+					>
+						<span className="emoji">👦</span>About me.
+					</motion.h2>
 
-				<div className="profile-container">
-					<ProfileCard />
-					<ProfileDetails />
+					<div className="profile-container">
+						<ProfileCard />
+						<ProfileDetails />
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+		</div>
 	);
 };
 

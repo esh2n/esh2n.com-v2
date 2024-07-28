@@ -1,7 +1,7 @@
 "use client";
 
 import { activeTabState } from "@/atoms/tabsState";
-import FileIcon from "@/components/elements/FileIcon";
+import { FileIcon } from "@/components/elements/FileIcon";
 import { getFileNameWithExtension } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";

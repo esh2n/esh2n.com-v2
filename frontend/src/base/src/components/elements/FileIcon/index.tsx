@@ -54,4 +54,4 @@ const FileIcon: React.FC<FileIconProps> = ({ filename, className = "" }) => {
 	);
 };
 
-export default FileIcon;
+export { FileIcon, StrokeColoredIcon, FilledColoredIcon };

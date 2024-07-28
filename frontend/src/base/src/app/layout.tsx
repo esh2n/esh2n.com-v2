@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Fira_Code } from "next/font/google";
 import "./globals.scss";
@@ -24,15 +25,17 @@ export default function RootLayout({
 		<html lang="ja">
 			<body className={inter.className}>
 				<RecoilProvider>
-					<Header />
-					<div className="tw-flex tw-h-[calc(100vh-61px)] tw-overflow-hidden">
-						<IconSideBar />
-						<VSCodeSidebar />
-						<div className="tw-flex tw-flex-col tw-flex-grow tw-min-w-0">
-							<VSCodeTabs />
-							<main className="tw-flex-grow">{children}</main>
+					<div className="tw-flex tw-flex-col tw-h-screen tw-overflow-hidden">
+						<Header />
+						<div className="tw-flex tw-flex-1 tw-overflow-hidden">
+							<IconSideBar />
+							<VSCodeSidebar />
+							<div className="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
+								<VSCodeTabs />
+								<main className="tw-flex-1 tw-overflow-auto">{children}</main>
+							</div>
+							<AIChat />
 						</div>
-						<AIChat />
 					</div>
 				</RecoilProvider>
 			</body>
