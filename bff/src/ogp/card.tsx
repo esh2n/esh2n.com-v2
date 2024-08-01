@@ -10,14 +10,14 @@ interface CardProps {
 	tags: string[];
 }
 
-const VSCodeWindow: FC<{ children: ReactNode; pageTitle: string }> = ({ children, pageTitle }) => (
+const VSCodeWindow = ({ children, pageTitle }: { children: React.ReactNode; pageTitle: string }) => (
 	<div style={{
 		width: '1200px',
 		height: '630px',
 		background: '#1e1e1e',
 		borderRadius: '8px',
 		overflow: 'hidden',
-		fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+		fontFamily: '"Fira Code", monospace',
 		color: '#d4d4d4',
 		display: 'flex',
 		flexDirection: 'column',
