@@ -1,15 +1,20 @@
 {
   "name": "bff",
   "scripts": {
-    "dev": "wrangler dev src/index.tsx",
+    "dev": "wrangler dev --remote src/index.tsx",
     "deploy": "wrangler deploy --minify src/index.tsx",
     "format": "bunx @biomejs/biome format --write src"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
     "@notionhq/client": "^2.2.15",
+    "@resvg/resvg-wasm": "^2.6.2",
+    "@types/react": "^18.3.3",
     "hono": "^4.5.2",
     "notion-to-md": "^3.1.1",
+    "react": "^18.3.1",
+    "satori": "^0.10.14",
+    "yoga-wasm-web": "^0.3.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {

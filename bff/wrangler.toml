@@ -10,9 +10,10 @@ NOTION_DATABASE_ID = "5c6b937abd244b3f92ab20ab5f74c845"
 # binding = "MY_KV_NAMESPACE"
 # id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "ogp"
+preview_bucket_name = "ogp"
 
 # [[d1_databases]]
 # binding = "DB"
