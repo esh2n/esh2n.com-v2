@@ -25,7 +25,7 @@ export function cn(...inputs: ClassValue[]) {
 const knownPaths: Record<string, string> = {
 	home: "tsx",
 	blogs: "md",
-	readme: "md",
+	resume: "md",
 	contact: "json",
 	about: "md",
 	settings: "json",
@@ -34,7 +34,7 @@ const knownPaths: Record<string, string> = {
 const pathToFileNameMap: Record<string, string> = {
 	"/": "Home",
 	"/about": "ABOUTME",
-	"/readme": "README",
+	"/resume": "RESUME",
 	"/contact": "contact",
 	"/blogs": "blogs",
 	"/settings": "settings",

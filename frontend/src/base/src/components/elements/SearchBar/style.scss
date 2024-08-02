@@ -13,9 +13,20 @@
     }
 
     .command-list {
-        border: 1px solid var(--border);
+        background-color: hsl(var(--background));
+        border-color: hsl(var(--border));
     }
 
+    .command-item {
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .command-item:hover,
+    .command-item.hovered {
+        background-color: hsl(var(--accent));
+        color: hsl(var(--accent-foreground));
+    }
 }
 
 @tailwind utilities;

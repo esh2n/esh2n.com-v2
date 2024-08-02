@@ -1,6 +1,7 @@
 "use client";
 
 import { activeTabState } from "@/atoms/tabsState";
+import Logo from "@/components/elements/Logo";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -28,13 +29,9 @@ const HomePage = () => {
 	const PageView = () => (
 		<div className="tw-max-w-4xl tw-mx-auto tw-py-16 tw-px-4 sm:tw-px-6 lg:tw-px-8">
 			<div className="tw-text-center">
-				<Image
-					src="/images/blog_dev.png"
-					alt="Developer Logo"
-					width={150}
-					height={150}
-					className="tw-mx-auto tw-mb-8"
-				/>
+				<div className="tw-flex tw-justify-center tw-items-center tw-mb-8">
+					<Logo />
+				</div>
 				<h1 className="tw-text-3xl tw-font-bold tw-text-foreground sm:tw-text-4xl sm:tw-tracking-tight lg:tw-text-5xl">
 					Welcome to esh2n.dev 🚀
 				</h1>
@@ -72,10 +69,10 @@ const HomePage = () => {
 					<motion.a
 						whileHover={{ scale: 1.05 }}
 						whileTap={{ scale: 0.95 }}
-						href="/readme"
+						href="/resume"
 						className="tw-inline-flex tw-items-center tw-justify-center tw-px-5 tw-py-3 tw-border tw-border-primary tw-text-base tw-font-medium tw-rounded-md tw-text-primary tw-bg-background hover:tw-bg-muted tw-mt-4"
 					>
-						README.mdを見る 📖
+						RESUME.mdを見る 📖
 					</motion.a>
 				</div>
 

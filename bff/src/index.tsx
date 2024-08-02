@@ -1,10 +1,8 @@
 import { Hono } from "hono";
+
 import { notion } from "./notion/api";
 import { ogp } from "./ogp/api";
 
-const app = new Hono();
-
-app.route("/api/notion", notion);
-app.route("/api/ogp", ogp);
-
+const app = new Hono().route("/api/notion", notion).route("/api/ogp", ogp);
+export type AppType = typeof app;
 export default app;

@@ -11,9 +11,11 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { motion } from "framer-motion";
+import { type Variants, motion } from "framer-motion";
 import { MessageCircle, Moon, Sun, Type } from "lucide-react";
 import { useRecoilState } from "recoil";
+
+import "./style.scss";
 
 const SettingsPage: React.FC = () => {
 	const [theme, setTheme] = useRecoilState(themeState);
@@ -28,7 +30,15 @@ const SettingsPage: React.FC = () => {
 	};
 
 	const handleColorThemeChange = (newTheme: string) => {
-		if (newTheme === "nord" || newTheme === "default") {
+		if (
+			newTheme === "nord" ||
+			newTheme === "default" ||
+			newTheme === "monokai" ||
+			newTheme === "one-dark" ||
+			newTheme === "solarized" ||
+			newTheme === "dracula" ||
+			newTheme === "tokyo-night"
+		) {
 			setTheme({
 				...theme,
 				theme: newTheme,
@@ -60,92 +70,122 @@ const SettingsPage: React.FC = () => {
 	};
 
 	return (
-		<motion.div
-			className="settings-page tw-space-y-6 tw-max-w-xl tw-mx-auto tw-p-6"
-			variants={containerVariants}
-			initial="hidden"
-			animate="visible"
-		>
-			<motion.h1
-				className="tw-text-3xl tw-font-bold tw-mb-8"
-				variants={itemVariants}
-			>
-				Settings
-			</motion.h1>
+		<div className="tw-w-full tw-overflow-x-hidden">
+			<section className="settings-section">
+				<div className="container">
+					<motion.h2
+						className="section-title"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5 }}
+					>
+						<span className="emoji">⚙️</span>Settings
+					</motion.h2>
 
-			<motion.div
-				className="setting-item tw-flex tw-justify-between tw-items-center tw-p-4 tw-rounded-lg hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800 tw-transition-colors"
-				variants={itemVariants}
-				whileHover={{ scale: 1.02 }}
-				whileTap={{ scale: 0.98 }}
-			>
-				<div className="tw-flex tw-items-center tw-space-x-2">
-					<Moon className="tw-h-5 tw-w-5" />
-					<span className="tw-text-lg">Dark Mode</span>
-				</div>
-				<Switch
-					checked={theme.isDarkMode}
-					onCheckedChange={handleDarkModeToggle}
-				/>
-			</motion.div>
+					<motion.div
+						className="settings-container"
+						variants={containerVariants}
+						initial="hidden"
+						animate="visible"
+					>
+						<SettingCard
+							icon={<Moon className="tw-h-5 tw-w-5" />}
+							title="Dark Mode"
+							variants={itemVariants}
+						>
+							<Switch
+								checked={theme.isDarkMode}
+								onCheckedChange={handleDarkModeToggle}
+							/>
+						</SettingCard>
 
-			<motion.div
-				className="setting-item tw-flex tw-justify-between tw-items-center tw-p-4 tw-rounded-lg hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800 tw-transition-colors"
-				variants={itemVariants}
-				whileHover={{ scale: 1.02 }}
-				whileTap={{ scale: 0.98 }}
-			>
-				<div className="tw-flex tw-items-center tw-space-x-2">
-					<Sun className="tw-h-5 tw-w-5" />
-					<span className="tw-text-lg">Color Theme</span>
-				</div>
-				<Select value={theme.theme} onValueChange={handleColorThemeChange}>
-					<SelectTrigger className="tw-w-[180px]">
-						<SelectValue placeholder="Select theme" />
-					</SelectTrigger>
-					<SelectContent position="popper" sideOffset={5} className="tw-z-50">
-						<SelectItem value="nord">Nord</SelectItem>
-						<SelectItem value="default">Default</SelectItem>
-					</SelectContent>
-				</Select>
-			</motion.div>
+						<SettingCard
+							icon={<Sun className="tw-h-5 tw-w-5" />}
+							title="Color Theme"
+							variants={itemVariants}
+						>
+							<Select
+								value={theme.theme}
+								onValueChange={handleColorThemeChange}
+							>
+								<SelectTrigger className="tw-w-[180px]">
+									<SelectValue placeholder="Select theme" />
+								</SelectTrigger>
+								<SelectContent
+									position="popper"
+									sideOffset={5}
+									className="tw-z-50"
+								>
+									<SelectItem value="nord">Nord</SelectItem>
+									<SelectItem value="monokai">Monokai</SelectItem>
+									<SelectItem value="one-dark">One Dark</SelectItem>
+									<SelectItem value="solarized">Solarized</SelectItem>
+									<SelectItem value="dracula">Dracula</SelectItem>
+									<SelectItem value="tokyo-night">Tokyo Night</SelectItem>
+									<SelectItem value="default">Default</SelectItem>
+								</SelectContent>
+							</Select>
+						</SettingCard>
 
-			<motion.div
-				className="setting-item tw-flex tw-justify-between tw-items-center tw-p-4 tw-rounded-lg hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800 tw-transition-colors"
-				variants={itemVariants}
-				whileHover={{ scale: 1.02 }}
-				whileTap={{ scale: 0.98 }}
-			>
-				<div className="tw-flex tw-items-center tw-space-x-2">
-					<MessageCircle className="tw-h-5 tw-w-5" />
-					<span className="tw-text-lg">AI Chat</span>
-				</div>
-				<Switch checked={aiChatOpen} onCheckedChange={handleAIChatToggle} />
-			</motion.div>
+						<SettingCard
+							icon={<MessageCircle className="tw-h-5 tw-w-5" />}
+							title="AI Chat"
+							variants={itemVariants}
+						>
+							<Switch
+								checked={aiChatOpen}
+								onCheckedChange={handleAIChatToggle}
+							/>
+						</SettingCard>
 
-			<motion.div
-				className="setting-item tw-flex tw-justify-between tw-items-center tw-p-4 tw-rounded-lg hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800 tw-transition-colors"
-				variants={itemVariants}
-				whileHover={{ scale: 1.02 }}
-				whileTap={{ scale: 0.98 }}
-			>
-				<div className="tw-flex tw-items-center tw-space-x-2">
-					<Type className="tw-h-5 tw-w-5" />
-					<span className="tw-text-lg">Font</span>
+						<SettingCard
+							icon={<Type className="tw-h-5 tw-w-5" />}
+							title="Font"
+							variants={itemVariants}
+						>
+							<Select value={fontFamily} onValueChange={handleFontChange}>
+								<SelectTrigger className="tw-w-[180px]">
+									<SelectValue placeholder="Select font" />
+								</SelectTrigger>
+								<SelectContent
+									position="popper"
+									sideOffset={5}
+									className="tw-z-50"
+								>
+									<SelectItem value="Inter">Inter</SelectItem>
+									<SelectItem value="Roboto">Roboto</SelectItem>
+									<SelectItem value="Open Sans">Open Sans</SelectItem>
+								</SelectContent>
+							</Select>
+						</SettingCard>
+					</motion.div>
 				</div>
-				<Select value={fontFamily} onValueChange={handleFontChange}>
-					<SelectTrigger className="tw-w-[180px]">
-						<SelectValue placeholder="Select font" />
-					</SelectTrigger>
-					<SelectContent position="popper" sideOffset={5} className="tw-z-50">
-						<SelectItem value="Inter">Inter</SelectItem>
-						<SelectItem value="Roboto">Roboto</SelectItem>
-						<SelectItem value="Open Sans">Open Sans</SelectItem>
-					</SelectContent>
-				</Select>
-			</motion.div>
-		</motion.div>
+			</section>
+		</div>
 	);
 };
 
+const SettingCard: React.FC<{
+	icon: React.ReactNode;
+	title: string;
+	children: React.ReactNode;
+	variants: Variants;
+}> = ({ icon, title, children, variants }) => (
+	<motion.div
+		className="setting-card"
+		variants={variants}
+		whileHover={{ scale: 1.02 }}
+		whileTap={{ scale: 0.98 }}
+	>
+		<div className="tw-flex tw-items-center tw-justify-between tw-w-full">
+			<div className="tw-flex tw-items-center tw-space-x-2">
+				{icon}
+				<span className="tw-text-lg">{title}</span>
+			</div>
+			<div className="tw-flex tw-items-center tw-justify-end tw-flex-shrink-0 tw-ml-4">
+				{children}
+			</div>
+		</div>
+	</motion.div>
+);
 export default SettingsPage;

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
     "strict": true,
     "skipLibCheck": true,
     "lib": [
@@ -14,5 +14,16 @@
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
+    "emitDeclarationOnly": false,
+    "declaration": true,
+    "declarationDir": "./dist"
   },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/__tests__/*",
+    "dist"
+  ]
 }

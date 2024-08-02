@@ -46,8 +46,8 @@ const VSCodeSidebar = () => {
 						/>
 						<SidebarItem href="/about" isCurrentPage={pathname === "/about"} />
 						<SidebarItem
-							href="/readme"
-							isCurrentPage={pathname === "/readme"}
+							href="/resume"
+							isCurrentPage={pathname === "/resume"}
 						/>
 					</SidebarSection>
 					<SidebarSection

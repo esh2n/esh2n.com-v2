@@ -1,48 +1,76 @@
 import { Hono } from "hono";
-import { getContent, getPosts, initNotion } from "./notion";
+import {
+	getContent,
+	getContentBySlug,
+	getPosts,
+	initNotion,
+	toMarkdownString,
+} from "./notion";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { etag } from "hono/etag";
+import { cache } from "hono/cache";
+import { hc } from "hono/client";
 
 type Bindings = {
 	NOTION_TOKEN: string;
 	NOTION_DATABASE_ID: string;
 };
 
-const notion = new Hono<{ Bindings: Bindings }>();
-
-notion.use("*", async (c, next) => {
-	const { NOTION_TOKEN, NOTION_DATABASE_ID } = c.env;
-	if (!NOTION_TOKEN || !NOTION_DATABASE_ID) {
-		return c.json({ error: "Notion token or database ID not found" }, 500);
-	}
-	return next();
-});
-
-notion.all("*", async (c, next) => {
-	initNotion(c.env.NOTION_TOKEN);
-	await next();
-});
-
-notion.get("/posts", async (c) => {
-	const posts = await getPosts(c.env.NOTION_DATABASE_ID);
-	return c.json(
-		{
-			posts,
-		},
-		200,
-	);
-});
-
 const getPostSchema = z.object({
 	id: z.string(),
 });
 
-notion.get(
-	"/posts/:id{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}",
-	zValidator("param", getPostSchema),
-	async (c) => {
-		const { id } = c.req.valid("param");
-		const post = await getContent(id);
+const getPostBySlugSchema = z.object({
+	slug: z.string(),
+});
+
+const notion = new Hono<{ Bindings: Bindings }>()
+	.use("*", async (c, next) => {
+		const { NOTION_TOKEN, NOTION_DATABASE_ID } = c.env;
+		if (!NOTION_TOKEN || !NOTION_DATABASE_ID) {
+			return c.json({ error: "Notion token or database ID not found" }, 500);
+		}
+		return next();
+	})
+	.all("*", async (c, next) => {
+		initNotion(c.env.NOTION_TOKEN);
+		await next();
+	})
+	.get("/posts", async (c) => {
+		const posts = await getPosts(c.env.NOTION_DATABASE_ID);
+		return c.json(
+			{
+				posts,
+			},
+			200,
+		);
+	})
+	.get(
+		"/posts/:id{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}",
+		zValidator("param", getPostSchema),
+		async (c) => {
+			const { id } = c.req.valid("param");
+			const post = await getContent(id);
+			if (!post) {
+				return c.json(
+					{
+						error: "Post not found",
+					},
+					404,
+				);
+			}
+			return c.json(
+				{
+					post,
+				},
+				200,
+			);
+		},
+	)
+	.get("/posts/:slug", zValidator("param", getPostBySlugSchema), async (c) => {
+		const { slug } = c.req.valid("param");
+		const post = await getContentBySlug(c.env.NOTION_DATABASE_ID, slug);
 		if (!post) {
 			return c.json(
 				{
@@ -51,13 +79,20 @@ notion.get(
 				404,
 			);
 		}
-		return c.json(
-			{
-				post,
-			},
-			200,
-		);
-	},
-);
+		return c.json({ post }, 200);
+	})
+	.get(
+		"/posts/content/:slug",
+		zValidator("param", getPostBySlugSchema),
+		async (c) => {
+			const { slug } = c.req.valid("param");
+			const post = await getContentBySlug(c.env.NOTION_DATABASE_ID, slug);
+			if (!post) {
+				return c.json({ error: "Post not found" }, 404);
+			}
+			const str = await toMarkdownString(post);
+			return c.json({ content: str }, 200);
+		},
+	);
 
 export { notion };

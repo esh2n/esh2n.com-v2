@@ -11,15 +11,18 @@ import {
 	CommandShortcut,
 } from "@/components/ui/command";
 import { Book, History, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./style.scss";
 
 export default function SearchBar() {
+	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [open, setOpen] = useState(false);
 	const [inputText, setInputText] = useState("");
 	const [selected, setSelected] = useState<string>();
 	const [searchResults, setSearchResults] = useState<string[]>([]);
+	const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -38,6 +41,39 @@ export default function SearchBar() {
 		setSearchResults(["test"]);
 		console.log(inputText);
 	}, [inputText]);
+
+	const handleItemHover = (item: string) => {
+		setHoveredItem(item);
+	};
+
+	const handleItemLeave = () => {
+		setHoveredItem(null);
+	};
+
+	const handleItemSelect = (item: string, path: string) => {
+		setSelected(item);
+		setInputText(item);
+		setOpen(false);
+		router.push(path);
+	};
+
+	const pageItems = [
+		{
+			name: "About me",
+			path: "/about",
+			icon: <User className="tw-mr-2 tw-h-4 tw-w-4" />,
+		},
+		{
+			name: "Blogs",
+			path: "/blogs",
+			icon: <Book className="tw-mr-2 tw-h-4 tw-w-4" />,
+		},
+		{
+			name: "Resume",
+			path: "/resume",
+			icon: <History className="tw-mr-2 tw-h-4 tw-w-4" />,
+		},
+	];
 
 	return (
 		<div className="tw-relative tw-w-full tw-max-w-[600px]">
@@ -68,19 +104,27 @@ export default function SearchBar() {
 				/>
 				{open && (
 					<div className="tw-absolute tw-left-0 tw-right-0 tw-top-full tw-mt-1 tw-w-full">
-						<div className="command-list tw-bg-white tw-rounded-md tw-shadow-lg tw-w-full">
+						<div className="command-list tw-bg-background tw-rounded-md tw-shadow-lg tw-w-full tw-border tw-border-border">
 							<CommandList>
 								<CommandEmpty>No results found.</CommandEmpty>
 								{searchResults?.length > 0 && (
 									<CommandGroup heading="Suggestions">
 										{searchResults?.map((v, i) => (
 											<CommandItem
-												onSelect={() => {
-													setSelected(v);
-													setInputText(v);
-												}}
-												value={v}
 												key={v}
+												onSelect={() =>
+													handleItemSelect(
+														v,
+														`/search?q=${encodeURIComponent(v)}`,
+													)
+												}
+												onMouseEnter={() => handleItemHover(v)}
+												onMouseLeave={handleItemLeave}
+												className={`tw-cursor-pointer ${
+													hoveredItem === v
+														? "tw-bg-accent tw-text-accent-foreground"
+														: ""
+												}`}
 											>
 												<Book className="tw-mr-2 tw-h-4 tw-w-4" />
 												<span>{v}</span>
@@ -91,21 +135,25 @@ export default function SearchBar() {
 								)}
 								<CommandSeparator />
 								<CommandGroup heading="Pages">
-									<CommandItem>
-										<User className="tw-mr-2 tw-h-4 tw-w-4" />
-										<span>About me</span>
-										<CommandShortcut>⌘A</CommandShortcut>
-									</CommandItem>
-									<CommandItem>
-										<Book className="tw-mr-2 tw-h-4 tw-w-4" />
-										<span>Blogs</span>
-										<CommandShortcut>⌘S</CommandShortcut>
-									</CommandItem>
-									<CommandItem>
-										<History className="tw-mr-2 tw-h-4 tw-w-4" />
-										<span>Resume</span>
-										<CommandShortcut>⌘B</CommandShortcut>
-									</CommandItem>
+									{pageItems.map((item, index) => (
+										<CommandItem
+											key={item.name}
+											onSelect={() => handleItemSelect(item.name, item.path)}
+											onMouseEnter={() => handleItemHover(item.name)}
+											onMouseLeave={handleItemLeave}
+											className={`tw-cursor-pointer ${
+												hoveredItem === item.name
+													? "tw-bg-accent tw-text-accent-foreground"
+													: ""
+											}`}
+										>
+											{item.icon}
+											<span>{item.name}</span>
+											<CommandShortcut>
+												⌘{String.fromCharCode(65 + index)}
+											</CommandShortcut>
+										</CommandItem>
+									))}
 								</CommandGroup>
 							</CommandList>
 						</div>

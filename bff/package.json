@@ -1,9 +1,16 @@
 {
-  "name": "bff",
+  "name": "@esh2n.com/bff",
+  "version": "3.0.10",
+  "main": "src/index.tsx",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "dev": "wrangler dev --remote src/index.tsx",
     "deploy": "wrangler deploy --minify src/index.tsx",
-    "format": "bunx @biomejs/biome format --write src"
+    "format": "bunx @biomejs/biome format --write src",
+    "build": "tsc",
+    "publish": "npm publish --access public"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",

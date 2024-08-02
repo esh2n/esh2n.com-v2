@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+
+.settings-section {
+    @apply tw-py-16 tw-bg-background tw-text-foreground tw-w-full tw-max-w-full;
+
+    .container {
+        @apply tw-max-w-6xl tw-mx-auto tw-px-4 tw-w-full;
+    }
+
+    .section-title {
+        @apply tw-text-4xl tw-font-semibold tw-mb-8 tw-text-primary;
+
+        .emoji {
+            @apply tw-mr-2;
+        }
+    }
+
+    .settings-container {
+        @apply tw-grid tw-gap-8 tw-grid-cols-1 md:tw-grid-cols-2;
+    }
+
+    .setting-card {
+        @apply tw-bg-card tw-text-card-foreground tw-rounded-lg tw-p-6 tw-shadow-md;
+
+        .tw-text-lg {
+            @apply tw-text-primary tw-font-medium;
+        }
+
+        >div {
+            @apply tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-center sm:tw-justify-between;
+
+            >div:first-child {
+                @apply tw-mb-2 sm:tw-mb-0;
+            }
+
+            >div:last-child {
+                @apply tw-w-full sm:tw-w-auto;
+            }
+        }
+    }
+}
+
+@tailwind utilities;

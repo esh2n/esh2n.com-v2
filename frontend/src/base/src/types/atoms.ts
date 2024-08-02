@@ -1,4 +1,13 @@
 export type ThemeState = {
-	theme: "default" | "nord";
+	theme: Theme;
 	isDarkMode: boolean;
 };
+
+export type Theme =
+	| "default"
+	| "nord"
+	| "monokai"
+	| "one-dark"
+	| "solarized"
+	| "dracula"
+	| "tokyo-night";
