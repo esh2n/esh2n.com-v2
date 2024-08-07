@@ -2,9 +2,13 @@
 @tailwind components;
 
 @layer components {
-    .vscode-sidebar {
+    .combined-sidebar {
         border-right: 1px solid var(--border);
         color: var(--foreground);
+        background-color: var(--background);
+        height: calc(100vh - 4rem);
+        overflow-y: auto;
+        z-index: 100;
     }
 
     svg {
@@ -14,6 +18,17 @@
 
     .highlight-bg {
         background-color: var(--muted);
+    }
+}
+
+@media (max-width: 767px) {
+    .combined-sidebar {
+        width: 300px;
+        position: fixed;
+        top: 4rem;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
     }
 }
 

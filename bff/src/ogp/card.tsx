@@ -21,7 +21,8 @@ const VSCodeWindow = ({
 			background: "#1e1e1e",
 			borderRadius: "8px",
 			overflow: "hidden",
-			fontFamily: '"Fira Code", monospace',
+			fontFamily: "NotoSansJPBold",
+			fontWeight: "100",
 			color: "#d4d4d4",
 			display: "flex",
 			flexDirection: "column",
@@ -99,6 +100,7 @@ const Tag: FC<{ name: string }> = ({ name }) => (
 			marginBottom: "8px",
 			display: "flex",
 			alignItems: "center",
+			fontFamily: "NotoSansJPRegular",
 		}}
 	>
 		{name}
@@ -185,6 +187,7 @@ export const Card: FC<CardProps> = ({
 						WebkitLineClamp: 3,
 						WebkitBoxOrient: "vertical",
 						marginBottom: "16px",
+						fontFamily: "NotoSansJPRegular",
 					}}
 				>
 					{description}

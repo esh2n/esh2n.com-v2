@@ -1,32 +1,29 @@
 @tailwind base;
 @tailwind components;
+@tailwind utilities;
 
 @layer components {
     .command {
-        --tw-border-opacity: 1;
-        border-color: rgb(var(--border) / var(--tw-border-opacity));
+        @apply tw-bg-background tw-border-border;
+    }
+
+    .command-input-wrapper {
+        @apply tw-flex tw-items-center tw-border-b tw-px-3 tw-bg-background;
     }
 
     .command-input {
-        --tw-bg-opacity: 1;
-        background-color: rgb(var(--input) / var(--tw-bg-opacity));
+        @apply tw-flex tw-h-11 tw-w-full tw-rounded-md tw-bg-transparent tw-py-3 tw-text-sm tw-outline-none tw-placeholder:tw-text-muted-foreground tw-disabled:tw-cursor-not-allowed tw-disabled:tw-opacity-50;
     }
 
     .command-list {
-        background-color: hsl(var(--background));
-        border-color: hsl(var(--border));
+        @apply tw-bg-background tw-border-border;
     }
 
     .command-item {
-        cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
+        @apply tw-cursor-pointer tw-transition-colors;
     }
 
-    .command-item:hover,
-    .command-item.hovered {
-        background-color: hsl(var(--accent));
-        color: hsl(var(--accent-foreground));
+    .command-item[data-selected="true"] {
+        @apply tw-bg-accent tw-text-accent-foreground;
     }
 }
-
-@tailwind utilities;

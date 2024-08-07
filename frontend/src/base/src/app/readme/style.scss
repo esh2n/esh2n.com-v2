@@ -1,0 +1,27 @@
+.readme-section {
+    .tech-stack {
+        .tech-item {
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+
+    .architecture-diagram {
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .readme-section {
+        .tech-stack {
+            grid-template-columns: 1fr;
+        }
+    }
+}

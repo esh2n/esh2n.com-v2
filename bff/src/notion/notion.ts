@@ -23,9 +23,15 @@ interface NotionPost {
 	updatedAt: string;
 }
 
-export async function getPosts(databaseId: string): Promise<NotionPost[]> {
+export async function getPosts(
+	databaseId: string,
+	pageSize: number,
+	startCursor?: string,
+): Promise<{ posts: NotionPost[]; nextCursor: string | null }> {
 	const response = await notion.databases.query({
 		database_id: databaseId,
+		page_size: pageSize,
+		start_cursor: startCursor,
 		sorts: [
 			{
 				property: "CreatedAt",
@@ -33,32 +39,23 @@ export async function getPosts(databaseId: string): Promise<NotionPost[]> {
 			},
 		],
 	});
-	const posts = response.results;
-	const postsProperties = posts.map((post: any) => {
-		const id = post.id;
-		const title = post.properties.Title.title[0]?.plain_text;
-		const tags = post.properties.Tags.multi_select.map(
-			(item: any) => item.name,
-		);
-		const author = post.properties.Author.select.name;
-		const colorCode = post.properties.ColorCode.rich_text[0]?.plain_text;
-		const emoji = post.properties.Emoji.rich_text[0]?.plain_text;
-		const slug = post.properties.Slug.rich_text[0]?.plain_text;
-		const createdAt = post.properties.CreatedAt.created_time;
-		const updatedAt = post.properties.UpdatedAt.last_edited_time;
-		return {
-			id,
-			title,
-			tags,
-			author,
-			colorCode,
-			emoji,
-			slug,
-			createdAt,
-			updatedAt,
-		};
-	});
-	return postsProperties;
+
+	const posts = response.results.map((post: any) => ({
+		id: post.id,
+		title: post.properties.Title.title[0]?.plain_text,
+		tags: post.properties.Tags.multi_select.map((item: any) => item.name),
+		author: post.properties.Author.select.name,
+		colorCode: post.properties.ColorCode.rich_text[0]?.plain_text,
+		emoji: post.properties.Emoji.rich_text[0]?.plain_text,
+		slug: post.properties.Slug.rich_text[0]?.plain_text,
+		createdAt: post.properties.CreatedAt.date.start,
+		updatedAt: post.properties.UpdatedAt.date.start,
+	}));
+
+	return {
+		posts,
+		nextCursor: response.next_cursor,
+	};
 }
 
 export const getContent = async (id: string) => {
@@ -67,6 +64,29 @@ export const getContent = async (id: string) => {
 
 export const toMarkdownString = async (mdBlock: MdBlock[]) => {
 	return n2m.toMarkdownString(mdBlock);
+};
+
+export const getPostInfo = async (post: any) => {
+	const id = post.id;
+	const title = post.properties.Title.title[0]?.plain_text;
+	const tags = post.properties.Tags.multi_select.map((item: any) => item.name);
+	const author = post.properties.Author.select.name;
+	const colorCode = post.properties.ColorCode.rich_text[0]?.plain_text;
+	const emoji = post.properties.Emoji.rich_text[0]?.plain_text;
+	const slug = post.properties.Slug.rich_text[0]?.plain_text;
+	const createdAt = post.properties.CreatedAt.date.start;
+	const updatedAt = post.properties.UpdatedAt.date.start;
+	return {
+		id,
+		title,
+		tags,
+		author,
+		colorCode,
+		emoji,
+		slug,
+		createdAt,
+		updatedAt,
+	};
 };
 
 export const getContentBySlug = async (databaseId: string, slug: string) => {
@@ -86,5 +106,7 @@ export const getContentBySlug = async (databaseId: string, slug: string) => {
 		},
 	});
 	const post = response.results[0];
-	return await n2m.pageToMarkdown(post.id, 2);
+	const content = await n2m.pageToMarkdown(post.id, 2);
+	const postInfo = await getPostInfo(post);
+	return { content, postInfo };
 };

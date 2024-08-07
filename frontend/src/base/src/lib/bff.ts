@@ -29,5 +29,5 @@ export const getPostStrMDContentBySlug = async (slug: string) => {
 	if (res.status !== 200) {
 		throw new Error("Failed to fetch posts");
 	}
-	return (await res.json()).content;
+	return await res.json();
 };

@@ -1,7 +1,6 @@
-import { LitElement, css, html, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, css, html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
-
 interface Message {
 	id: number;
 	text: string;
@@ -61,13 +60,14 @@ export class AIChat extends LitElement {
       background-color: var(--ai-chat-background-color);
       height: 100%;
       width: 100%;
+      font-size: 16px; /* ベースフォントサイズを設定 */
     }
 
     /* Layout */
     .l-chat {
       box-sizing: border-box;
-      max-width: 600px;
-      height: inherit;
+      max-width: 100%; /* 最大幅を100%に変更 */
+      height: 100%;
       margin: 0 auto;
       border: 1px solid var(--ai-chat-border-color);
       border-radius: var(--ai-chat-border-radius);
@@ -78,7 +78,7 @@ export class AIChat extends LitElement {
 
     .l-chat__messages {
       flex: 1;
-      height: 300px;
+      min-height: 200px; /* 最小の高さを設定 */
       overflow-y: auto;
       padding: 10px;
     }
@@ -95,28 +95,23 @@ export class AIChat extends LitElement {
       justify-content: center;
       padding: 10px;
       background-color: var(--ai-chat-header-bg-color);
-      font-size: var(--ai-chat-header-font-size);
+      font-size: 0.875em; /* remからemに変更 */
       color: var(--ai-chat-header-text-color);
     }
 
     .c-header__icon {
       margin-right: 10px;
-      font-size: 14px;
-    }
-
-    .c-header__icon::before {
-      content: var(--ai-chat-header-icon);
-      font-family: var(--ai-chat-icon-font-family);
-      font-weight: 900;
+      font-size: 1em; /* 相対単位に変更 */
     }
 
     .c-message {
       display: flex;
-      align-items: start;
+      align-items: flex-start;
       margin-top: 10px;
       border-radius: var(--ai-chat-message-border-radius);
-      max-width: 70%;
-      font-size: var(--ai-chat-message-font-size);
+      max-width: 80%; /* 最大幅を増やす */
+      font-size: 0.875em; /* remからemに変更 */
+      word-wrap: break-word; /* 長い単語を折り返す */
     }
 
     .c-message.u-continuous {
@@ -126,7 +121,7 @@ export class AIChat extends LitElement {
     .c-message__content {
       padding: 8px 12px;
       border-radius: var(--ai-chat-message-border-radius);
-      font-size: var(--ai-chat-message-font-size);
+      font-size: 1em; /* 相対単位に変更 */
     }
 
     .c-message__content.u-ai {
@@ -136,31 +131,25 @@ export class AIChat extends LitElement {
     }
 
     .c-message__icon {
-      width: 24px;
-      height: 24px;
+      min-width: 24px; /* 最小幅を設定 */
+      min-height: 24px; /* 最小高さを設定 */
+      width: 1.5em; /* 相対単位に変更 */
+      height: 1.5em; /* 相対単位に変更 */
       display: flex;
       align-items: center;
       justify-content: center;
       background-color: var(--ai-chat-ai-icon-bg-color);
       border-radius: 50%;
+      margin-right: 8px; /* アイコンとメッセージの間隔を追加 */
     }
 
     .c-message__icon::before {
       content: var(--ai-chat-ai-icon);
       font-family: var(--ai-chat-icon-font-family);
       font-weight: 900;
-      font-size: 14px;
+      font-size: 0.875em; /* 相対単位に変更 */
       color: var(--ai-chat-ai-icon-text-color);
     }
-
-    .c-message__icon.u-continuous {
-      background-color: var(--ai-chat-ai-message-bg-color);
-    }
-
-    .c-message__icon.u-continuous::before {
-      content: '';
-    }
-
 
     .c-input {
       display: flex;
@@ -169,7 +158,6 @@ export class AIChat extends LitElement {
       border: 1px solid var(--ai-chat-input-border-color);
       border-radius: var(--ai-chat-input-border-radius);
       background-color: var(--ai-chat-input-field-bg-color);
-
     }
 
     .c-input__field {
@@ -180,17 +168,20 @@ export class AIChat extends LitElement {
       font-family: inherit;
       background-color: var(--ai-chat-input-field-bg-color);
       color: var(--ai-chat-input-field-text-color);
-      font-size: var(--ai-chat-input-field-font-size);
+      font-size: 0.875em;
+      min-width: 0;
     }
 
     .c-input__field::placeholder {
       color: var(--ai-chat-input-placeholder-color);
-      font-size: var(--ai-chat-input-field-font-size);
+      font-size: 1em;
     }
 
     .c-button {
-      width: 30px;
-      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      width: 2em;
+      height: 2em;
       background-color: var(--ai-chat-button-bg-color);
       color: var(--ai-chat-button-text-color);
       border: none;
@@ -201,12 +192,13 @@ export class AIChat extends LitElement {
       justify-content: center;
       padding: 0;
       margin-left: 8px;
+      flex-shrink: 0;
     }
 
     .c-button__icon::before {
       content: var(--ai-chat-button-icon);
       font-family: var(--ai-chat-icon-font-family);
-      font-size: var(--ai-chat-input-field-font-size);
+      font-size: 1em;
       font-weight: 900;
     }
 
@@ -224,18 +216,42 @@ export class AIChat extends LitElement {
       align-self: flex-start;
     }
 
-    /* Object - Utility */
-    .u-hidden {
-      display: none;
+    /* Media Queries */
+    @media (max-width: 480px) {
+      :host {
+        font-size: 14px;
+      }
+
+      .l-chat__messages {
+        padding: 5px;
+      }
+
+      .c-message {
+        max-width: 90%;
+      }
+
+      .c-input__field {
+        font-size: 1em;
+      }
     }
   `;
-
 	constructor() {
 		super();
 		const fontEl = document.createElement("link");
 		fontEl.rel = "stylesheet";
 		fontEl.href = "https://use.fontawesome.com/releases/v6.2.0/css/all.css";
 		document.head.appendChild(fontEl);
+	}
+
+	@state()
+	private isComposing = false;
+
+	private handleCompositionStart() {
+		this.isComposing = true;
+	}
+
+	private handleCompositionEnd() {
+		this.isComposing = false;
 	}
 
 	@property({ type: String })
@@ -252,6 +268,94 @@ export class AIChat extends LitElement {
 
 	@property({ type: String })
 	buttonIcon = "\\f1d8"; // Default FontAwesome paper plane icon
+
+	@property({ type: Function })
+	onMessageSent?: (event: CustomEvent<{ message: string }>) => void;
+
+	connectedCallback() {
+		super.connectedCallback();
+		if (this.onMessageSent) {
+			this.addEventListener(
+				"message-sent",
+				this.onMessageSent as EventListener,
+			);
+		}
+	}
+
+	disconnectedCallback() {
+		if (this.onMessageSent) {
+			this.removeEventListener(
+				"message-sent",
+				this.onMessageSent as EventListener,
+			);
+		}
+		super.disconnectedCallback();
+	}
+
+	addMessage(text: string, sender: "user" | "ai") {
+		this.messages = [
+			...this.messages,
+			{
+				id: Date.now(),
+				text,
+				sender,
+				isContinuous: this.isContinuousMessage(sender),
+			},
+		];
+		this.requestUpdate();
+	}
+
+	updateLastAIMessage(text: string) {
+		if (
+			this.messages.length > 0 &&
+			this.messages[this.messages.length - 1].sender === "ai"
+		) {
+			this.messages[this.messages.length - 1].text = text;
+		} else {
+			this.addMessage(text, "ai");
+		}
+		this.requestUpdate();
+	}
+
+	private isContinuousMessage(sender: "user" | "ai"): boolean {
+		return (
+			this.messages.length > 0 &&
+			this.messages[this.messages.length - 1].sender === sender
+		);
+	}
+
+	sendMessage() {
+		if (this.inputMessage.trim() !== "") {
+			this.addMessage(this.inputMessage, "user");
+			const event = new CustomEvent("message-sent", {
+				detail: { message: this.inputMessage },
+				bubbles: true,
+				composed: true,
+			});
+			this.dispatchEvent(event);
+
+			if (this.onMessageSent) {
+				this.onMessageSent(event);
+			}
+
+			this.inputMessage = "";
+			this.requestUpdate();
+		}
+	}
+
+	private handleInput(e: InputEvent) {
+		const target = e.target as HTMLInputElement;
+		this.inputMessage = target.value;
+	}
+
+	private handleKeyDown(e: KeyboardEvent) {
+		if (e.key === "Enter" && !e.shiftKey) {
+			if (!this.isComposing) {
+				e.preventDefault();
+				this.sendMessage();
+			}
+		}
+	}
 
 	render() {
 		return html`
@@ -281,7 +385,9 @@ export class AIChat extends LitElement {
               type="text"
               .value=${this.inputMessage}
               @input=${this.handleInput}
-              @keyup=${this.handleKeyUp}
+              @keydown=${this.handleKeyDown}
+              @compositionstart=${this.handleCompositionStart}
+              @compositionend=${this.handleCompositionEnd}
               placeholder="${this.inputPlaceholder}"
             >
             <button class="c-button" @click=${this.sendMessage}>
@@ -296,51 +402,6 @@ export class AIChat extends LitElement {
 	updated(changedProperties: Map<string, unknown>) {
 		if (changedProperties.has("buttonIcon")) {
 			this.style.setProperty("--ai-chat-button-icon", `'${this.buttonIcon}'`);
-		}
-	}
-
-	private handleInput(e: InputEvent) {
-		const target = e.target as HTMLInputElement;
-		this.inputMessage = target.value;
-	}
-
-	private handleKeyUp(e: KeyboardEvent) {
-		if (e.key === "Enter") {
-			this.sendMessage();
-		}
-	}
-
-	private sendMessage() {
-		if (this.inputMessage.trim() !== "") {
-			this.messages = [
-				...this.messages,
-				{ id: Date.now(), text: this.inputMessage, sender: "user" },
-			];
-			this.inputMessage = "";
-			if (
-				this.messages.length > 1 &&
-				this.messages[this.messages.length - 1].sender ===
-					this.messages[this.messages.length - 2].sender
-			) {
-				this.messages[this.messages.length - 1].isContinuous = true;
-			}
-			this.requestUpdate();
-
-			// AIの応答をシミュレート
-			setTimeout(() => {
-				this.messages = [
-					...this.messages,
-					{ id: Date.now(), text: "AIからの応答例です。", sender: "ai" },
-				];
-				if (
-					this.messages.length > 1 &&
-					this.messages[this.messages.length - 1].sender ===
-						this.messages[this.messages.length - 2].sender
-				) {
-					this.messages[this.messages.length - 1].isContinuous = true;
-				}
-				this.requestUpdate();
-			}, 1000);
 		}
 	}
 }

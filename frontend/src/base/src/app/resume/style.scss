@@ -1,0 +1,93 @@
+.resume-section {
+    .resume-content {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .timeline-container {
+        padding-left: 2rem;
+        margin-left: 0.75rem;
+    }
+
+    .timeline {
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: var(--tw-color-primary, #0070f3);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+
+            &:last-child {
+                padding-bottom: 0;
+            }
+
+            .timeline-marker {
+                position: absolute;
+                left: -2.3rem; // 調整
+                top: 0.25rem;
+                width: 0.6rem; // サイズを少し小さく
+                height: 0.6rem; // サイズを少し小さく
+                border-radius: 50%;
+                background-color: var(--tw-color-primary, #0070f3);
+                border: 2px solid var(--tw-color-background, #ffffff);
+            }
+
+            .timeline-content {
+                position: relative;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: -2rem;
+                    top: 0.5rem;
+                    width: 1rem;
+                    height: 2px;
+                    background-color: var(--tw-color-primary, #0070f3);
+                }
+            }
+        }
+    }
+
+    .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .resume-section {
+        .timeline-container {
+            padding-left: 1.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .timeline {
+            &::before {
+                left: -1.5rem;
+            }
+
+            .timeline-item {
+                .timeline-marker {
+                    left: -1.8rem;
+                }
+
+                .timeline-content {
+                    &::before {
+                        left: -1.5rem;
+                        width: 0.75rem;
+                    }
+                }
+            }
+        }
+    }
+}

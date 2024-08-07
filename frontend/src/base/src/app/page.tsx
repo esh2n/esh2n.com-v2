@@ -3,7 +3,6 @@
 import { activeTabState } from "@/atoms/tabsState";
 import Logo from "@/components/elements/Logo";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa6";
 import { useRecoilValue } from "recoil";
@@ -30,7 +29,7 @@ const HomePage = () => {
 		<div className="tw-max-w-4xl tw-mx-auto tw-py-16 tw-px-4 sm:tw-px-6 lg:tw-px-8">
 			<div className="tw-text-center">
 				<div className="tw-flex tw-justify-center tw-items-center tw-mb-8">
-					<Logo />
+					<Logo width={50} height={50} fontSize={24} />
 				</div>
 				<h1 className="tw-text-3xl tw-font-bold tw-text-foreground sm:tw-text-4xl sm:tw-tracking-tight lg:tw-text-5xl">
 					Welcome to esh2n.dev 🚀
@@ -69,10 +68,10 @@ const HomePage = () => {
 					<motion.a
 						whileHover={{ scale: 1.05 }}
 						whileTap={{ scale: 0.95 }}
-						href="/resume"
+						href="/readme"
 						className="tw-inline-flex tw-items-center tw-justify-center tw-px-5 tw-py-3 tw-border tw-border-primary tw-text-base tw-font-medium tw-rounded-md tw-text-primary tw-bg-background hover:tw-bg-muted tw-mt-4"
 					>
-						RESUME.mdを見る 📖
+						README.mdを見る 📖
 					</motion.a>
 				</div>
 

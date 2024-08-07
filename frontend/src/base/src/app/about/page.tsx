@@ -93,8 +93,8 @@ const ProfileDetails: React.FC = () => {
 			<div className="detail-section">
 				<h4 className="section-subtitle">技術スタック</h4>
 				<p>
-					Go TypeScript gRPC Next.js Flutter Firebase GCP Blockchain
-					あたりは実務経験があります。
+					Go TypeScript gRPC Next.js Flutter Firebase GCP
+					Blockchainは実務経験があります。
 				</p>
 				<p>また、Elm Deno Rust などが好きでよく触っています。</p>
 			</div>

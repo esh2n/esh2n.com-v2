@@ -10,7 +10,8 @@ type Bindings = {
 	BUCKET: R2Bucket;
 };
 
-let fontArrBuf: null | ArrayBuffer = null;
+let notoSansBoldFontArrBuf: null | ArrayBuffer = null;
+let notoSansRegularFontArrBuf: null | ArrayBuffer = null;
 
 const ogp = new Hono<{ Bindings: Bindings }>()
 	.use(
@@ -36,13 +37,20 @@ const ogp = new Hono<{ Bindings: Bindings }>()
 				.map((tag) => tag.trim())
 				.slice(0, 5);
 
-			const list = await c.env.BUCKET.list();
-			if (fontArrBuf === null) {
-				const fontObj = await c.env.BUCKET.get("fonts/FiraCode-Regular.ttf");
+			if (notoSansRegularFontArrBuf === null) {
+				const fontObj = await c.env.BUCKET.get("fonts/NotoSansJP-Regular.ttf");
 				if (!fontObj) {
 					return c.text("Font not found", 404);
 				}
-				fontArrBuf = await fontObj.arrayBuffer();
+				notoSansRegularFontArrBuf = await fontObj.arrayBuffer();
+			}
+
+			if (notoSansBoldFontArrBuf === null) {
+				const fontObj = await c.env.BUCKET.get("fonts/NotoSansJP-Bold.ttf");
+				if (!fontObj) {
+					return c.text("Font not found", 404);
+				}
+				notoSansBoldFontArrBuf = await fontObj.arrayBuffer();
 			}
 
 			const card = (
@@ -61,25 +69,36 @@ const ogp = new Hono<{ Bindings: Bindings }>()
 				630,
 				[
 					{
-						name: "FiraCode-Regular",
-						data: fontArrBuf,
+						name: "NotoSansJPRegular",
+						data: notoSansRegularFontArrBuf,
 						weight: 400,
+						style: "normal",
+					},
+					{
+						name: "NotoSansJPBold",
+						data: notoSansBoldFontArrBuf,
+						weight: 700,
 						style: "normal",
 					},
 				],
 				async () => [],
 			);
-			const key = new URL(c.req.url).searchParams.toString();
+
+			// Generate a safe key for R2
+			const safeKey =
+				`cache/${encodeURIComponent(title)}-${Date.now()}.png`.slice(0, 1024);
 			const uint8Array = new Uint8Array(img.buffer);
-			await c.env.BUCKET.put(`cache/${key}.png`, uint8Array);
+			await c.env.BUCKET.put(safeKey, uint8Array);
+
 			return new Response(uint8Array, {
 				status: 200,
 				headers: {
 					"Content-Type": "image/png",
 				},
 			});
-		} catch (e) {
-			return c.text(`Error: ${e}`, 500);
+		} catch (e: any) {
+			console.error("OGP generation error:", e);
+			return c.text(`Error generating OGP image: ${e.message}`, 500);
 		}
 	});
 

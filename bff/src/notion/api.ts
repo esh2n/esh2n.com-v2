@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import {
 	getContent,
 	getContentBySlug,
+	getPostInfo,
 	getPosts,
 	initNotion,
 	toMarkdownString,
@@ -21,6 +22,11 @@ const getPostSchema = z.object({
 	id: z.string(),
 });
 
+const getPostsSchema = z.object({
+	pageSize: z.number(),
+	startCursor: z.string(),
+});
+
 const getPostBySlugSchema = z.object({
 	slug: z.string(),
 });
@@ -37,8 +43,9 @@ const notion = new Hono<{ Bindings: Bindings }>()
 		initNotion(c.env.NOTION_TOKEN);
 		await next();
 	})
-	.get("/posts", async (c) => {
-		const posts = await getPosts(c.env.NOTION_DATABASE_ID);
+	.get("/posts", zValidator("query", getPostsSchema), async (c) => {
+		const { pageSize, startCursor } = c.req.valid("query");
+		const posts = await getPosts(c.env.NOTION_DATABASE_ID, pageSize, startCursor);
 		return c.json(
 			{
 				posts,
@@ -86,12 +93,15 @@ const notion = new Hono<{ Bindings: Bindings }>()
 		zValidator("param", getPostBySlugSchema),
 		async (c) => {
 			const { slug } = c.req.valid("param");
-			const post = await getContentBySlug(c.env.NOTION_DATABASE_ID, slug);
-			if (!post) {
+			const { content, postInfo } = await getContentBySlug(
+				c.env.NOTION_DATABASE_ID,
+				slug,
+			);
+			if (!content) {
 				return c.json({ error: "Post not found" }, 404);
 			}
-			const str = await toMarkdownString(post);
-			return c.json({ content: str }, 200);
+			const str = await toMarkdownString(content);
+			return c.json({ content: str, postInfo }, 200);
 		},
 	);
 
