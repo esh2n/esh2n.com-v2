@@ -17,7 +17,6 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "workspaces": ["packages/*", "src/*"],
   "packageManager": "bun@1.1.17",
   "dependencies": {
     "lefthook": "^1.6.18"
