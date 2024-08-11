@@ -1,0 +1,24 @@
+name = "bff"
+compatibility_date = "2024-07-29"
+main = "src/index.tsx"
+
+[vars]
+NOTION_TOKEN = "secret_pdataGXrhOlTnNZUq7FU6BbDYSxU4pXzKuEyZ88IGFz"
+NOTION_DATABASE_ID = "5c6b937abd244b3f92ab20ab5f74c845"
+
+# [[kv_namespaces]]
+# binding = "MY_KV_NAMESPACE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "ogp"
+preview_bucket_name = "ogp"
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "my-database"
+# database_id = ""
+
+# [ai]
+# binding = "AI"

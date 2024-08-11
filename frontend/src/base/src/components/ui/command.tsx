@@ -41,12 +41,15 @@ const CommandInput = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.Input>,
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-	<div className="tw-flex tw-items-center tw-px-3" cmdk-input-wrapper="">
-		<Search className="tw-mr-2 tw-h-4 tw-w-4 tw-shrink-0 tw-opacity-50" />
+	<div
+		className="tw-bg-background tw-flex tw-items-center tw-px-3 tw-w-full"
+		cmdk-input-wrapper=""
+	>
+		<Search className="tw-bg-background tw-mr-2 tw-h-4 tw-w-4 tw-shrink-0 tw-opacity-50" />
 		<CommandPrimitive.Input
 			ref={ref}
 			className={cn(
-				"tw-flex tw-h-11 tw-w-full tw-rounded-md tw-bg-transparent tw-py-3 tw-text-sm tw-outline-none placeholder:tw-text-muted-foreground disabled:tw-cursor-not-allowed disabled:tw-opacity-50",
+				"tw-bg-background tw-flex tw-h-11 tw-w-full tw-rounded-md tw-py-3 tw-text-sm tw-outline-none placeholder:tw-text-muted-foreground disabled:tw-cursor-not-allowed disabled:tw-opacity-50",
 				className,
 			)}
 			{...props}
@@ -120,7 +123,7 @@ const CommandItem = React.forwardRef<
 	<CommandPrimitive.Item
 		ref={ref}
 		className={cn(
-			"tw-relative tw-flex tw-cursor-default tw-select-none tw-items-center tw-rounded-sm tw-px-2 tw-py-1.5 tw-text-sm tw-outline-none aria-selected:tw-bg-accent aria-selected:tw-text-accent-foreground data-[disabled]:tw-pointer-events-none data-[disabled]:tw-opacity-50",
+			"tw-relative tw-flex tw-cursor-default tw-select-none tw-items-center tw-rounded-sm tw-px-2 tw-py-1.5 tw-text-sm tw-outline-none aria-selected:tw-bg-accent aria-selected:tw-text-accent-foreground",
 			className,
 		)}
 		{...props}

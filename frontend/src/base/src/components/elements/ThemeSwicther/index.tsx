@@ -15,34 +15,39 @@ export default function ThemeSwitcher(): JSX.Element {
 
 	const applyTheme = useCallback((currentTheme: ThemeState): void => {
 		const themeName = currentTheme.theme;
-		const className = `${themeName}${currentTheme.isDarkMode ? "" : "-light"}`;
-		const classList = Array.from(document.documentElement.classList);
-		for (const cls of classList) {
-			if (cls.startsWith(themeName) || cls.endsWith("-light")) {
-				document.documentElement.classList.remove(cls);
-			}
+		const modeClass = currentTheme.isDarkMode ? "dark" : "";
+		document.documentElement.classList.remove("dark");
+		document.documentElement.classList.remove(
+			"default",
+			"nord",
+			"monokai",
+			"dracula",
+			"one-dark",
+			"solarized",
+			"tokyo-night",
+		);
+		if (modeClass) {
+			document.documentElement.classList.add(themeName, modeClass);
+		} else {
+			document.documentElement.classList.add(themeName);
 		}
-		document.documentElement.classList.add(className);
 	}, []);
 
 	useEffect(() => {
 		if (initialRenderRef.current) {
 			initialRenderRef.current = false;
-			// Load theme from localStorage on initial render
 			const savedTheme = localStorage.getItem("theme");
 			if (savedTheme) {
 				const parsedTheme = JSON.parse(savedTheme) as ThemeState;
 				setTheme(parsedTheme);
 			} else {
-				// If no saved theme, save the current theme to localStorage
 				localStorage.setItem("theme", JSON.stringify(theme));
 			}
 		} else {
-			// Save theme to localStorage on subsequent renders
 			localStorage.setItem("theme", JSON.stringify(theme));
 		}
-		// Apply theme on every render
 		applyTheme(theme);
+		document.body.style.display = "block";
 	}, [theme, setTheme, applyTheme]);
 
 	const toggleMode = useCallback((): void => {

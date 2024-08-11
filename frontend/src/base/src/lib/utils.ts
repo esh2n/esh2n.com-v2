@@ -1,3 +1,4 @@
+import type { Theme } from "@/types/atoms";
 import { type ClassValue, clsx } from "clsx";
 import { BookOpenText, Settings } from "lucide-react";
 import {
@@ -24,7 +25,8 @@ export function cn(...inputs: ClassValue[]) {
 
 const knownPaths: Record<string, string> = {
 	home: "tsx",
-	blogs: "md",
+	blogs: "json",
+	resume: "md",
 	readme: "md",
 	contact: "json",
 	about: "md",
@@ -34,6 +36,7 @@ const knownPaths: Record<string, string> = {
 const pathToFileNameMap: Record<string, string> = {
 	"/": "Home",
 	"/about": "ABOUTME",
+	"/resume": "RESUME",
 	"/readme": "README",
 	"/contact": "contact",
 	"/blogs": "blogs",
@@ -78,9 +81,19 @@ const getLastSegment = (path: string): string => {
 	return segments.length ? segments[segments.length - 1] : "home";
 };
 
+const getSecondLastSegment = (path: string): string => {
+	const segments = path.split("/").filter(Boolean);
+	return segments.length > 1 ? segments[segments.length - 2] : "";
+};
+
 export const getExtensionByPath = (path: string): string => {
 	const lastSegment = getLastSegment(path);
-	return path.includes("changelog") ? "txt" : knownPaths[lastSegment] || "html";
+	const secondLastSegment = getSecondLastSegment(path);
+
+	if (path.includes("changelog")) return "txt";
+	if (secondLastSegment === "blogs") return "md";
+
+	return knownPaths[lastSegment] || knownPaths[secondLastSegment] || "html";
 };
 
 export const getFileNameWithExtension = (path: string): string => {
@@ -97,11 +110,38 @@ export const getFileIconInfo = (filename: string): IconInfo => {
 
 export const getFileNameForPath = (path: string): string => {
 	const lastSegment = getLastSegment(path);
-	return path.includes("changelog")
-		? `${lastSegment}.txt`
-		: `${lastSegment}.txt`;
+	const extension = getExtensionByPath(path);
+	return `${lastSegment}.${extension}`;
 };
 
 export const getTabLabelForPath = (path: string): string => {
-	return path === "/" ? "home" : getFileNameForPath(path).split(".")[0];
+	return path === "/" ? "home" : getLastSegment(path);
+};
+
+export const getShikiTheme = (theme: Theme, isDarkMode: boolean): string => {
+	switch (theme) {
+		case "default":
+			return isDarkMode ? "github-dark" : "github-light";
+		case "nord":
+			return isDarkMode ? "nord" : "github-light";
+		case "monokai":
+			return isDarkMode ? "monokai" : "github-light";
+		case "one-dark":
+			return isDarkMode ? "one-dark-pro" : "one-light";
+		case "solarized":
+			return isDarkMode ? "solarized-dark" : "solarized-light";
+		case "dracula":
+			return isDarkMode ? "dracula" : "github-light";
+		case "tokyo-night":
+			return isDarkMode ? "tokyo-night" : "tokyo-night-light";
+	}
+};
+export const formatDate = (dateString: string): string => {
+	const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})/);
+	if (match) {
+		const [_, year, month, day] = match;
+		return `${year}/${month}/${day}`;
+	}
+	console.error(`Invalid date format: ${dateString}`);
+	return dateString;
 };

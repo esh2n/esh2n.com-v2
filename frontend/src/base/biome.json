@@ -10,6 +10,6 @@
 		}
 	},
 	"files": {
-    	"ignore": ["**/node_modules/**", "**/stories/**"]
-  	}
+		"ignore": ["**/node_modules/**", "**/stories/**", "**/dist/**"]
+	}
 }

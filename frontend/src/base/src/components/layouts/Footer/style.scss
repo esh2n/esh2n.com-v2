@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+
+.footer-info {
+    @apply tw-hidden;
+
+    @media (min-width: 768px) {
+        @apply tw-flex tw-items-center;
+    }
+}
+
+.footer-item {
+    @apply tw-flex tw-items-center tw-mr-4;
+
+    &:last-child {
+        @apply tw-mr-0;
+    }
+}
+
+@tailwind utilities;

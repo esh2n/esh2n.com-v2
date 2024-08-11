@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.image-wrapper {
+    position: relative;
+}
+
+.logo-text {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: var(--foreground);
+    white-space: nowrap;
+}
+
+@tailwind utilities;
