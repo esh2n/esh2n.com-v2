@@ -55,7 +55,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@chromatic-com/storybook": "^1.6.1",
-    "@esh2n.com/bff": "4.0.1",
+    "@esh2n.com/bff": "5.0.5",
     "@esh2n.com/md2html": "0.1.0",
     "@storybook/addon-essentials": "^8.1.11",
     "@storybook/addon-interactions": "^8.1.11",

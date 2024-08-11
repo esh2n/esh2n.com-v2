@@ -28,17 +28,31 @@ export async function getPosts(
 	pageSize: number,
 	startCursor?: string,
 ): Promise<{ posts: NotionPost[]; nextCursor: string | null }> {
-	const response = await notion.databases.query({
-		database_id: databaseId,
-		page_size: pageSize,
-		start_cursor: startCursor,
-		sorts: [
-			{
-				property: "CreatedAt",
-				direction: "descending",
-			},
-		],
-	});
+	let response;
+	if (startCursor && startCursor !== "") {
+		response = await notion.databases.query({
+			database_id: databaseId,
+			page_size: pageSize,
+			start_cursor: startCursor,
+			sorts: [
+				{
+					property: "CreatedAt",
+					direction: "descending",
+				},
+			],
+		});
+	} else {
+		response = await notion.databases.query({
+			database_id: databaseId,
+			page_size: pageSize,
+			sorts: [
+				{
+					property: "CreatedAt",
+					direction: "descending",
+				},
+			],
+		});
+	}
 
 	const posts = response.results.map((post: any) => ({
 		id: post.id,

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import type { Highlighter } from "shiki";
 
+import "./style.scss";
+
 interface CodeViewerProps {
 	content: string;
 	language: string;

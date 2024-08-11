@@ -25,7 +25,7 @@ export function cn(...inputs: ClassValue[]) {
 
 const knownPaths: Record<string, string> = {
 	home: "tsx",
-	blogs: "md",
+	blogs: "json",
 	resume: "md",
 	readme: "md",
 	contact: "json",

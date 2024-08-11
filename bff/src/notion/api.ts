@@ -11,7 +11,6 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { etag } from "hono/etag";
 import { cache } from "hono/cache";
-import { hc } from "hono/client";
 
 type Bindings = {
 	NOTION_TOKEN: string;
@@ -23,8 +22,8 @@ const getPostSchema = z.object({
 });
 
 const getPostsSchema = z.object({
-	pageSize: z.number(),
-	startCursor: z.string(),
+	pageSize: z.string().transform(Number),
+	startCursor: z.string().optional(),
 });
 
 const getPostBySlugSchema = z.object({
@@ -45,7 +44,11 @@ const notion = new Hono<{ Bindings: Bindings }>()
 	})
 	.get("/posts", zValidator("query", getPostsSchema), async (c) => {
 		const { pageSize, startCursor } = c.req.valid("query");
-		const posts = await getPosts(c.env.NOTION_DATABASE_ID, pageSize, startCursor);
+		const posts = await getPosts(
+			c.env.NOTION_DATABASE_ID,
+			pageSize,
+			startCursor,
+		);
 		return c.json(
 			{
 				posts,

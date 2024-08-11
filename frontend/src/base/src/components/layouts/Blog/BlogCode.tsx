@@ -1,6 +1,5 @@
 import CodeViewer from "@/components/elements/CodeViewer";
 import type { PostResponse } from "@/types/post";
-import "./style.scss";
 
 const BlogCode = ({ post }: { post: PostResponse }) => {
 	const { title, tags, author, emoji, createdAt, updatedAt } = post.postInfo;

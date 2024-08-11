@@ -14,8 +14,12 @@ export const generateMetadata = async ({
 		.trim();
 	const imageURL = "https://avatars.githubusercontent.com/u/55518345?v=4";
 	const data = `https://bff.esh2n.workers.dev/api/ogp?pageTitle=esh2n.dev&title=${encodeURIComponent(title)}&date=${new Date(createdAt).toLocaleDateString()}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(imageURL)}&tags=${tags}`;
+	let formattedTitle = title;
+	if (title.length > 25) {
+		formattedTitle = `${title.slice(0, 25)}...`;
+	}
 	return {
-		title: `${title} | esh2n.dev`,
+		title: formattedTitle,
 		description,
 		openGraph: {
 			images: [

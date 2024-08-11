@@ -1,17 +1,15 @@
-import Logo from "@/components/elements/Logo";
 import SearchBar from "@/components/elements/SearchBar";
 import ThemeSwitcher from "@/components/elements/ThemeSwicther";
 
 import "./style.scss";
 import Link from "next/link";
+import { ResponsiveLogo } from "./ResponsiveLogo";
 
 export default function Header() {
 	return (
 		<header className="header tw-flex tw-items-center tw-justify-between tw-container tw-w-full tw-py-2 tw-px-4">
 			<div className="tw-flex tw-items-center">
-				<Link href="/">
-					<Logo width={20} height={20} fontSize={16} />
-				</Link>
+				<ResponsiveLogo />
 			</div>
 			<div className="tw-flex tw-items-center tw-flex-grow tw-justify-center tw-mx-4">
 				<SearchBar />

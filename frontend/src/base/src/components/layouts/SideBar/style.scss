@@ -25,10 +25,19 @@
     .combined-sidebar {
         width: 300px;
         position: fixed;
-        top: 4rem;
+        top: 3.5rem;
         left: 0;
         bottom: 0;
         z-index: 50;
+    }
+
+    .search-bar {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .command-j {
+        display: none;
     }
 }
 

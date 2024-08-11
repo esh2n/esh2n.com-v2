@@ -43,7 +43,7 @@ const CombinedSidebar = () => {
 				setIsOpen(false);
 			} else {
 				setIsOpen(true);
-				setWidth(200); // Reset to default width when switching to desktop
+				setWidth(200);
 			}
 		}
 	}, [isMobile, setWidth]);
@@ -159,7 +159,7 @@ const CombinedSidebar = () => {
 						exit={{ scale: 0 }}
 						whileHover={{ scale: 1.1 }}
 						whileTap={{ scale: 0.9 }}
-						className="tw-fixed tw-top-3 tw-right-3 tw-z-50 tw-p-2 tw-bg-primary tw-rounded-full tw-shadow-lg tw-flex tw-items-center tw-justify-center"
+						className="tw-fixed tw-top-2 tw-left-2 tw-z-50 tw-p-2 tw-bg-primary tw-rounded-full tw-shadow-lg tw-flex tw-items-center tw-justify-center"
 						onClick={toggleSidebar}
 						aria-label="Toggle menu"
 					>

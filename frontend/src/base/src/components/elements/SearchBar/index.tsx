@@ -10,6 +10,7 @@ import {
 	CommandSeparator,
 } from "@/components/ui/command";
 import { getAllPosts } from "@/lib/bff";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import {
 	Book,
 	FileText,
@@ -20,7 +21,8 @@ import {
 	User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import * as React from "react";
+import type { ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface PageItem {
 	name: string;
@@ -31,71 +33,90 @@ interface PageItem {
 
 export default function SearchBar() {
 	const router = useRouter();
-	const [open, setOpen] = React.useState(false);
-	const [pages, setPages] = React.useState<PageItem[]>([]);
-	const [blogs, setBlogs] = React.useState<PageItem[]>([]);
-	const [hoveredItem, setHoveredItem] = React.useState<string | null>(null);
+	const [open, setOpen] = useState(false);
+	const [pages, setPages] = useState<PageItem[]>([]);
+	const [blogs, setBlogs] = useState<PageItem[]>([]);
+	const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [isSmallScreen, setIsSmallScreen] = useState(false);
 
-	React.useEffect(() => {
-		const fetchPages = async () => {
-			const sidebarPages: PageItem[] = [
-				{
-					name: "About me",
-					path: "/about",
-					icon: <User className="tw-mr-2 tw-h-4 tw-w-4" />,
-					shortcut: "A",
-				},
-				{
-					name: "Readme",
-					path: "/readme",
-					icon: <FileText className="tw-mr-2 tw-h-4 tw-w-4" />,
-					shortcut: "R",
-				},
-				{
-					name: "Resume",
-					path: "/resume",
-					icon: <History className="tw-mr-2 tw-h-4 tw-w-4" />,
-					shortcut: "E",
-				},
-				{
-					name: "Contact",
-					path: "/contact",
-					icon: <Mail className="tw-mr-2 tw-h-4 tw-w-4" />,
-					shortcut: "C",
-				},
-				{
-					name: "Blog",
-					path: "/blogs",
-					icon: <Book className="tw-mr-2 tw-h-4 tw-w-4" />,
-					shortcut: "B",
-				},
-				{
-					name: "Settings",
-					path: "/settings",
-					icon: <Settings className="tw-mr-2 tw-h-4 tw-w-4" />,
-					shortcut: "S",
-				},
-			];
-
-			// const posts = await getAllPosts(); // TODO: 最新の5件を取得
-
-			// const blogPages: PageItem[] = [];
-			// for (const post of posts) {
-			// 	blogPages.push({
-			// 		name: post.title,
-			// 		path: `/blog/${post.slug}`,
-			// 		icon: <FileText className="tw-mr-2 tw-h-4 tw-w-4" />,
-			// 	});
-			// }
-
-			setPages(sidebarPages);
-			// setBlogs(blogPages);
+	useEffect(() => {
+		const checkScreenSize = () => {
+			setIsSmallScreen(window.innerWidth < 768);
 		};
 
-		fetchPages();
+		checkScreenSize();
+		window.addEventListener("resize", checkScreenSize);
+
+		return () => window.removeEventListener("resize", checkScreenSize);
 	}, []);
 
-	React.useEffect(() => {
+	const fetchPages = useCallback(async () => {
+		const sidebarPages: PageItem[] = [
+			{
+				name: "About me",
+				path: "/about",
+				icon: <User className="tw-mr-2 tw-h-4 tw-w-4" />,
+				shortcut: "A",
+			},
+			{
+				name: "Readme",
+				path: "/readme",
+				icon: <FileText className="tw-mr-2 tw-h-4 tw-w-4" />,
+				shortcut: "R",
+			},
+			{
+				name: "Resume",
+				path: "/resume",
+				icon: <History className="tw-mr-2 tw-h-4 tw-w-4" />,
+				shortcut: "E",
+			},
+			{
+				name: "Contact",
+				path: "/contact",
+				icon: <Mail className="tw-mr-2 tw-h-4 tw-w-4" />,
+				shortcut: "C",
+			},
+			{
+				name: "Blog",
+				path: "/blogs",
+				icon: <Book className="tw-mr-2 tw-h-4 tw-w-4" />,
+				shortcut: "B",
+			},
+			{
+				name: "Settings",
+				path: "/settings",
+				icon: <Settings className="tw-mr-2 tw-h-4 tw-w-4" />,
+				shortcut: "S",
+			},
+		];
+		11;
+
+		setPages(sidebarPages);
+
+		try {
+			console.log("Fetching blog posts...");
+			const res = await getAllPosts(5, "");
+			const { posts } = res.posts;
+			const blogPages: PageItem[] = posts.map((post) => ({
+				name:
+					post.title.length > 25 ? `${post.title.slice(0, 25)}...` : post.title,
+				path: `/blogs/${post.slug}`,
+				icon: <FileText className="tw-mr-2 tw-h-4 tw-w-4" />,
+			}));
+			setBlogs(blogPages);
+			setError(null);
+		} catch (err) {
+			console.error("Error fetching blog posts:", err);
+			setError(`Failed to fetch blog posts: ${err}`);
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchPages();
+	}, [fetchPages]);
+
+	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
 			if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
 				e.preventDefault();
@@ -107,7 +128,7 @@ export default function SearchBar() {
 		return () => document.removeEventListener("keydown", down);
 	}, []);
 
-	const runCommand = React.useCallback((command: () => unknown) => {
+	const runCommand = useCallback((command: () => unknown) => {
 		setOpen(false);
 		command();
 	}, []);
@@ -117,17 +138,24 @@ export default function SearchBar() {
 			<button
 				onClick={() => setOpen(true)}
 				type="button"
-				className="tw-flex tw-items-center tw-justify-between tw-w-64 tw-bg-background tw-text-foreground tw-rounded-md tw-border tw-border-input tw-px-3 tw-py-2 tw-text-sm tw-font-normal"
+				className={`tw-flex tw-items-center tw-justify-between tw-bg-background tw-text-foreground tw-rounded-md tw-border tw-border-input tw-px-3 tw-py-2 tw-text-sm tw-font-normal ${
+					isSmallScreen ? "tw-w-30" : "tw-w-64"
+				}`}
 			>
 				<div className="tw-flex tw-items-center">
 					<Search className="tw-mr-2 tw-h-4 tw-w-4" />
-					<span>Search pages...</span>
+					<span>{isSmallScreen ? "Search" : "Search pages..."}</span>
 				</div>
-				<kbd className="tw-pointer-events-none tw-inline-flex tw-h-5 tw-select-none tw-items-center tw-gap-1 tw-rounded tw-border tw-bg-muted tw-px-1.5 tw-font-mono tw-text-[10px] tw-font-medium tw-text-muted-foreground tw-opacity-100">
-					<span className="tw-text-xs">⌘</span>J
-				</kbd>
+				{!isSmallScreen && (
+					<kbd className="tw-pointer-events-none tw-inline-flex tw-h-5 tw-select-none tw-items-center tw-gap-1 tw-rounded tw-border tw-bg-muted tw-px-1.5 tw-font-mono tw-text-[10px] tw-font-medium tw-text-muted-foreground tw-opacity-100">
+						<span className="tw-text-xs">⌘</span>J
+					</kbd>
+				)}
 			</button>
 			<CommandDialog open={open} onOpenChange={setOpen}>
+				<DialogTitle asChild>
+					<VisuallyHidden>Search pages and blog posts</VisuallyHidden>
+				</DialogTitle>
 				<div
 					className="tw-flex tw-items-center tw-border-b tw-px-3 tw-bg-background"
 					cmdk-input-wrapper=""
@@ -139,6 +167,7 @@ export default function SearchBar() {
 				</div>
 				<CommandList>
 					<CommandEmpty>No results found.</CommandEmpty>
+					{error && <div className="tw-text-red-500 tw-p-2">{error}</div>}
 					<CommandGroup heading="Pages">
 						{pages.map((page) => (
 							<CommandItem
@@ -158,8 +187,8 @@ export default function SearchBar() {
 							</CommandItem>
 						))}
 					</CommandGroup>
-					{/* <CommandSeparator />
-					<CommandGroup heading="Blog Posts">
+					<CommandSeparator />
+					<CommandGroup heading="Recent Blog Posts">
 						{blogs.map((blog, index) => (
 							<CommandItem
 								key={blog.path}
@@ -176,24 +205,33 @@ export default function SearchBar() {
 							</CommandItem>
 						))}
 					</CommandGroup>
-					<CommandSeparator /> */}
-					{/* TODO: Add actions */}
-					{/* <CommandGroup heading="Actions">
-						<CommandItem
-							onSelect={() => runCommand(() => router.push("/search"))}
-							onMouseEnter={() => setHoveredItem("search")}
-							onMouseLeave={() => setHoveredItem(null)}
-							className={`tw-cursor-pointer ${hoveredItem === "search" ? "tw-bg-accent tw-text-accent-foreground" : ""}`}
-						>
-							<Search className="tw-mr-2 tw-h-4 tw-w-4" />
-							<span>Search</span>
-							<kbd className="tw-ml-auto tw-pointer-events-none tw-inline-flex tw-h-5 tw-select-none tw-items-center tw-gap-1 tw-rounded tw-border tw-bg-muted tw-px-1.5 tw-font-mono tw-text-[10px] tw-font-medium tw-text-muted-foreground">
-								S
-							</kbd>
-						</CommandItem>
-					</CommandGroup> */}
 				</CommandList>
 			</CommandDialog>
 		</>
 	);
 }
+
+interface VisuallyHiddenProps {
+	children: ReactNode;
+}
+
+const VisuallyHidden = ({ children }: VisuallyHiddenProps) => {
+	return (
+		<span
+			style={{
+				border: 0,
+				clip: "rect(0 0 0 0)",
+				height: "1px",
+				margin: "-1px",
+				overflow: "hidden",
+				padding: 0,
+				position: "absolute",
+				width: "1px",
+				whiteSpace: "nowrap",
+				wordWrap: "normal",
+			}}
+		>
+			{children}
+		</span>
+	);
+};
