@@ -54,6 +54,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@chromatic-com/storybook": "^1.6.1",
+    "@cloudflare/workers-types": "^4.20240806.0",
     "@esh2n.com/bff": "5.0.5",
     "@esh2n.com/md2html": "0.1.0",
     "@esh2n.com/ui": "2.0.4",
