@@ -3,10 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "format": "turbo run format",
-    "lint": "turbo run lint",
+    "lint": "bunx @biomejs/biome check --apply src",
     "test": "turbo run test"
   },
   "devDependencies": {

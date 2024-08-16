@@ -38,6 +38,14 @@ const notion = new Hono<{ Bindings: Bindings }>()
 		}
 		return next();
 	})
+	.use(
+		"/",
+		etag(),
+		cache({
+			cacheName: "notion",
+			cacheControl: "public, max-age=604800",
+		}),
+	)
 	.all("*", async (c, next) => {
 		initNotion(c.env.NOTION_TOKEN);
 		await next();

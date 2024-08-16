@@ -8,7 +8,12 @@ const app = new Hono()
 	.use(
 		"/*",
 		cors({
-			origin: ["http://localhost:3000", "http://esh2n.dev"],
+			origin: [
+				"http://localhost:3000",
+				"http://esh2n.dev",
+				"https://esh2n-com-v2.vercel.app/",
+				"https://www.esh2n.dev",
+			],
 			allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 			allowHeaders: ["Content-Type", "Authorization"],
 			exposeHeaders: ["Content-Length", "X-Kuma-Revision"],

@@ -354,3 +354,5 @@ dist
 *storybook.log
 
 .turbo
+
+dify-cloud-run.yaml
