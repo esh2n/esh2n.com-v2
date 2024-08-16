@@ -23,19 +23,19 @@
     .setting-card {
         @apply tw-bg-card tw-text-card-foreground tw-rounded-lg tw-p-6 tw-shadow-md;
 
-        .tw-text-lg {
-            @apply tw-text-primary tw-font-medium;
-        }
-
         >div {
-            @apply tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-center sm:tw-justify-between;
+            @apply tw-flex tw-flex-row tw-items-center tw-justify-between tw-w-full;
 
             >div:first-child {
-                @apply tw-mb-2 sm:tw-mb-0;
+                @apply tw-flex tw-items-center tw-space-x-2;
+
+                .tw-text-lg {
+                    @apply tw-text-primary tw-font-medium;
+                }
             }
 
             >div:last-child {
-                @apply tw-w-full sm:tw-w-auto;
+                @apply tw-flex tw-items-center tw-justify-end tw-flex-shrink-0 tw-ml-4;
             }
         }
     }

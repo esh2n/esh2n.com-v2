@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import "./style.scss";
 
+import { Bot, MessageCircle, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import type { AIChatReact as AIChatReactType, Message } from "./util";
 
@@ -77,12 +78,19 @@ async function processStream(
 
 const AIChatWrapper: React.FC = () => {
 	const [width, setWidth] = useRecoilState(aiChatWidthState);
-	const isOpen = useRecoilValue(aiChatOpenState);
+	const [isOpen, setIsOpen] = useRecoilState(aiChatOpenState);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isClient, setIsClient] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
 
 	useEffect(() => {
 		setIsClient(true);
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		checkMobile();
+		window.addEventListener("resize", checkMobile);
+		return () => window.removeEventListener("resize", checkMobile);
 	}, []);
 
 	const handleMessageSent = useCallback(async (e: CustomEvent) => {
@@ -146,22 +154,62 @@ const AIChatWrapper: React.FC = () => {
 		return null;
 	}
 
+	const toggleChat = () => {
+		setIsOpen(!isOpen);
+	};
 	return (
-		isOpen && (
-			<div
-				className="tw-relative tw-h-full tw-overflow-auto"
-				style={{ width: `${width}px` }}
-			>
-				<AIChatComponent
-					messages={messages}
-					onMessageSent={handleMessageSent}
-					updateLastAIMessage={updateLastAIMessage}
-					headerTxt="このサイト、ターミナルが出せる...?"
-					inputPlaceholder="得意な言語は？"
-				/>
-				{/* <div className="resizer tw-absolute tw-top-0 tw-left-0 tw-w-1 tw-h-full tw-cursor-col-resize hover:tw-bg-gray-300" /> */}
-			</div>
-		)
+		<>
+			{isMobile ? (
+				<>
+					<button
+						type="button"
+						onClick={toggleChat}
+						className="tw-fixed tw-bottom-4 tw-right-4 tw-z-50 tw-bg-primary tw-text-primary-foreground tw-rounded-full tw-shadow-lg tw-flex tw-items-center tw-justify-center tw-px-4 tw-py-3 tw-transition-all tw-duration-300 tw-ease-in-out"
+					>
+						<Bot size={24} className="tw-text-primary-foreground tw-mr-2" />
+						<span className="tw-font-medium tw-whitespace-nowrap">
+							Chat with AI
+						</span>
+						<span className="tw-absolute tw-top-0 tw-right-0 tw-w-3 tw-h-3 tw-bg-green-500 tw-rounded-full tw-animate-pulse" />
+					</button>
+					{isOpen && (
+						<div className="tw-fixed tw-inset-0 tw-z-50 tw-bg-background tw-overflow-auto">
+							<div className="tw-relative tw-h-full">
+								<button
+									type="button"
+									onClick={toggleChat}
+									className="tw-absolute tw-top-4 tw-right-4 tw-z-10 tw-bg-secondary tw-text-secondary-foreground tw-rounded-full tw-p-2 tw-transition-colors tw-duration-200 hover:tw-bg-secondary-hover"
+								>
+									<X size={24} />
+								</button>
+								<AIChatComponent
+									messages={messages}
+									onMessageSent={handleMessageSent}
+									updateLastAIMessage={updateLastAIMessage}
+									headerTxt="このサイト、ターミナルが出せる...?"
+									inputPlaceholder="得意な言語は？"
+								/>
+							</div>
+						</div>
+					)}
+				</>
+			) : (
+				isOpen && (
+					<div
+						className="tw-relative tw-h-full tw-overflow-auto"
+						style={{ width: `${width}px` }}
+					>
+						<AIChatComponent
+							messages={messages}
+							onMessageSent={handleMessageSent}
+							updateLastAIMessage={updateLastAIMessage}
+							headerTxt="このサイト、ターミナルが出せる...?"
+							inputPlaceholder="得意な言語は？"
+						/>
+					</div>
+				)
+			)}
+		</>
 	);
 };
 

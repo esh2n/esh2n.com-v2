@@ -1,5 +1,10 @@
 #!/bin/bash
 
+set -a
+. /etc/secrets/.env
+set +a
+env > /etc/environment
+
 if [ "${NGINX_HTTPS_ENABLED}" = "true" ]; then
     # Check if the certificate and key files for the specified domain exist
     if [ -n "${CERTBOT_DOMAIN}" ] && \
@@ -34,6 +39,10 @@ envsubst "$env_vars" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 envsubst "$env_vars" < /etc/nginx/proxy.conf.template > /etc/nginx/proxy.conf
 
 envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
+# echo env
+echo "Environment variables:"
+printenv
 
 # Start Nginx using the default entrypoint
 exec nginx -g 'daemon off;'

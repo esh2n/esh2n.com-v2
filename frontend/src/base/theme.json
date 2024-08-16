@@ -258,10 +258,7 @@
 		},
 		{
 			"name": "Entity Name Class/Type",
-			"scope": [
-				"entity.name.class",
-				"entity.name.type.class"
-			],
+			"scope": ["entity.name.class", "entity.name.type.class"],
 			"settings": {
 				"foreground": "#8FBCBB"
 			}
@@ -1012,9 +1009,7 @@
 		},
 		{
 			"name": "[Python] Function Parameter",
-			"scope": [
-				"source.python variable.parameter.function.language"
-			],
+			"scope": ["source.python variable.parameter.function.language"],
 			"settings": {
 				"foreground": "#D8DEE9"
 			}
@@ -1096,9 +1091,7 @@
 		},
 		{
 			"name": "[TypeScript] Variables",
-			"scope": [
-				"source.ts support.variable"
-			],
+			"scope": ["source.ts support.variable"],
 			"settings": {
 				"foreground": "#D8DEE9"
 			}
@@ -1144,10 +1137,7 @@
 		},
 		{
 			"name": "Comment",
-			"scope": [
-				"comment",
-				"punctuation.definition.comment"
-			],
+			"scope": ["comment", "punctuation.definition.comment"],
 			"settings": {
 				"foreground": "#d8dee980"
 			}
