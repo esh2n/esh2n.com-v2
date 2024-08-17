@@ -118,13 +118,41 @@ const HomeContent = () => {
 							新しい技術を学び、それを実際のプロジェクトに適用することにも情熱を注いでいます。
 						</span>
 					</p>
+					<div className="tw-flex tw-justify-center tw-space-x-4">
+						<motion.a
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							href="/about"
+							className="tw-inline-flex tw-items-center tw-justify-center tw-px-5 tw-py-3 tw-border tw-border-primary tw-text-base tw-font-medium tw-rounded-md tw-text-primary tw-bg-background hover:tw-bg-muted"
+						>
+							もっと詳しく 👀
+						</motion.a>
+						<motion.a
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							href="/resume"
+							className="tw-inline-flex tw-items-center tw-justify-center tw-px-5 tw-py-3 tw-border tw-border-primary tw-text-base tw-font-medium tw-rounded-md tw-text-primary tw-bg-background hover:tw-bg-muted"
+						>
+							職務経歴書を見る 📄
+						</motion.a>
+					</div>
+				</div>
+
+				<div className="tw-mt-4 tw-bg-card tw-p-6 tw-rounded-lg tw-shadow-md">
+					<h2 className="tw-text-2xl tw-font-semibold tw-mb-4 tw-text-foreground">
+						ブログ 📝
+					</h2>
+					<p className="tw-text-muted-foreground tw-mb-4">
+						技術的な洞察、プロジェクトの更新、そして個人的な思考をブログで共有しています。
+						最新の投稿をチェックしてみてください。
+					</p>
 					<motion.a
 						whileHover={{ scale: 1.05 }}
 						whileTap={{ scale: 0.95 }}
-						href="/about"
+						href="/blogs"
 						className="tw-inline-flex tw-items-center tw-justify-center tw-px-5 tw-py-3 tw-border tw-border-primary tw-text-base tw-font-medium tw-rounded-md tw-text-primary tw-bg-background hover:tw-bg-muted"
 					>
-						もっと詳しく 👀
+						ブログを読む 📚
 					</motion.a>
 				</div>
 
@@ -150,32 +178,8 @@ const HomeContent = () => {
 		</div>
 	);
 };
+
 export default HomeContent;
-
-const TypewriterText: React.FC<{
-	text: string;
-	delay: number;
-	onComplete: () => void;
-}> = ({ text, delay, onComplete }) => {
-	const [displayedText, setDisplayedText] = useState("");
-
-	useEffect(() => {
-		let i = 0;
-		const timer = setInterval(() => {
-			if (i < text.length) {
-				setDisplayedText((prev) => prev + text.charAt(i));
-				i++;
-			} else {
-				clearInterval(timer);
-				onComplete();
-			}
-		}, delay);
-
-		return () => clearInterval(timer);
-	}, [text, delay, onComplete]);
-
-	return <>{displayedText}</>;
-};
 
 const WavingHand = () => (
 	<motion.span
