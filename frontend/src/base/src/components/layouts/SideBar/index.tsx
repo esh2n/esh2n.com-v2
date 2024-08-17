@@ -34,22 +34,20 @@ const CombinedSidebar = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
+	const [isInitialized, setIsInitialized] = useState(false);
 
 	const checkIsMobile = useCallback(() => {
 		const mobile = window.innerWidth < 768;
-		if (mobile !== isMobile) {
-			setIsMobile(mobile);
-			if (mobile) {
-				setIsOpen(false);
-			} else {
-				setIsOpen(true);
-				setWidth(200);
-			}
+		setIsMobile(mobile);
+		setIsOpen(!mobile);
+		if (!mobile) {
+			setWidth(200);
 		}
-	}, [isMobile, setWidth]);
+	}, [setWidth]);
 
 	useEffect(() => {
 		checkIsMobile();
+		setIsInitialized(true);
 		window.addEventListener("resize", checkIsMobile);
 		return () => window.removeEventListener("resize", checkIsMobile);
 	}, [checkIsMobile]);
@@ -127,27 +125,34 @@ const CombinedSidebar = () => {
 				/>
 
 				{isMobile && (
-					<div className="tw-mt-4">
-						<h3 className="tw-text-sm tw-font-bold tw-mb-2">Links</h3>
-						<div className="tw-flex tw-flex-wrap tw-gap-2">
-							{iconLinks.map(({ id, Icon, href }) => (
-								<Link
-									key={id}
-									href={href}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="tw-p-2 tw-bg-gray-700 tw-rounded"
-								>
-									<Icon className="tw-w-5 tw-h-5" />
-								</Link>
-							))}
+					<div className="tw-flex tw-flex-col tw-gap-2">
+						<div className="tw-mt-4">
+							<h3 className="tw-text-sm tw-font-bold tw-mb-2">Links</h3>
+							<div className="tw-flex tw-flex-wrap tw-gap-2">
+								{iconLinks.map(({ id, Icon, href }) => (
+									<Link
+										key={id}
+										href={href}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="tw-p-2 tw-bg-gray-700 tw-rounded"
+									>
+										<Icon className="tw-w-5 tw-h-5" />
+									</Link>
+								))}
+							</div>
 						</div>
+						<TipMeModal />
 					</div>
 				)}
 			</div>
-			<TipMeModal />
+			{!isMobile && <TipMeModal />}
 		</div>
 	);
+
+	if (!isInitialized) {
+		return null;
+	}
 
 	return (
 		<>
