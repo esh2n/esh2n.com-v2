@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fira_Code } from "next/font/google";
 import "./globals.scss";
 import AIChat from "@/components/elements/AIChat";
@@ -10,6 +10,11 @@ import VSCodeTabs from "@/components/layouts/Tab";
 import RecoilProvider from "./recoilProvider";
 
 const inter = Fira_Code({ subsets: ["latin"] });
+export const viewport: Viewport = {
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 1,
+};
 export const metadata: Metadata = {
 	title: {
 		template: "%s | esh2n.dev",
@@ -75,12 +80,6 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ja">
-			<head>
-				<meta
-					name="viewport"
-					content="width=device-width,initial-scale=1.0,maximum-scale=1.0"
-				/>
-			</head>
 			<body className={inter.className}>
 				<RecoilProvider>
 					<div className="tw-flex tw-flex-col tw-h-screen tw-overflow-hidden">
