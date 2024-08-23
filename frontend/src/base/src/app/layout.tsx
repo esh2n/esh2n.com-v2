@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 		siteName: "esh2n.dev",
 		images: [
 			{
-				url: "https://esh2n.dev/og.png",
+				url: "https://www.esh2n.dev/images/og.png",
 				width: 1200,
 				height: 630,
 				alt: "esh2n.dev",
