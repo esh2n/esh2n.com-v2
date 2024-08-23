@@ -356,3 +356,7 @@ dist
 .turbo
 
 dify-cloud-run.yaml
+
+backend/dify/docker/volumes
+
+frontend/packages/md2html/target
