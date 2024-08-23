@@ -23,6 +23,16 @@ export const getAllPosts = async (pageSize = 10, startCursor?: string) => {
 	};
 };
 
+export const getTotalPostsCount = async () => {
+	const res = await client.api.notion.posts.count.$get();
+	if (res.status !== 200) {
+		throw new Error("Failed to fetch posts count");
+	}
+
+	const data = await res.json();
+	return data.count;
+};
+
 export const getPostContentBySlug = async (slug: string) => {
 	const res = await client.api.notion.posts[":slug"].$get({
 		param: { slug },

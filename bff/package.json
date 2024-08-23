@@ -1,6 +1,6 @@
 {
   "name": "@esh2n.com/bff",
-  "version": "5.0.5",
+  "version": "6.0.6",
   "main": "src/index.tsx",
   "files": [
     "src"
@@ -9,7 +9,6 @@
     "dev": "wrangler dev --remote src/index.tsx",
     "deploy": "wrangler deploy --minify src/index.tsx",
     "format": "bunx @biomejs/biome format --write src",
-    "build": "tsc",
     "publish": "npm publish --access public"
   },
   "dependencies": {

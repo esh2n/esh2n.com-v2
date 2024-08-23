@@ -6,7 +6,7 @@ import { ogp } from "./ogp/api";
 
 const app = new Hono()
 	.use(
-		"/*",
+		"*",
 		cors({
 			origin: [
 				"http://localhost:3000",
@@ -22,7 +22,7 @@ const app = new Hono()
 		}),
 	)
 	.use(
-		"/",
+		"*",
 		cors({
 			origin: "http://esh2n.dev",
 			allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -34,5 +34,6 @@ const app = new Hono()
 	)
 	.route("/api/notion", notion)
 	.route("/api/ogp", ogp);
+
 export type AppType = typeof app;
 export default app;
