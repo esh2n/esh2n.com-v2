@@ -31,7 +31,10 @@ fn preprocess_bookmark_links(markdown: &str) -> String {
     let re = Regex::new(r"\[bookmark\]\((.*?)\)").unwrap();
     re.replace_all(markdown, |caps: &regex::Captures| {
         let url = &caps[1];
-        format!("<div class=\"link-card\" data-url=\"{}\"></div>", url)
+        format!(
+            "<div class=\"link-card\" data-url=\"{}\" data-processed=\"false\"></div>",
+            url
+        )
     })
     .into_owned()
 }

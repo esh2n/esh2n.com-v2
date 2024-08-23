@@ -8,6 +8,13 @@ import { useRecoilValue } from "recoil";
 import "./style.scss";
 import { getShikiTheme } from "@/lib/utils";
 
+interface OGPData {
+	"og:title"?: string;
+	"og:description"?: string;
+	"og:site_name"?: string;
+	"og:image"?: string;
+}
+
 const MarkdownRenderer = ({ content }: { content: string }) => {
 	const [html, setHtml] = useState<string>("");
 	const { theme, isDarkMode } = useRecoilValue(themeState);
@@ -21,6 +28,60 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 			return false;
 		}
 	}, []);
+
+	const fetchOGP = useCallback(async (url: string): Promise<OGPData> => {
+		const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+		try {
+			const response = await fetch(proxyUrl);
+			const html = await response.text();
+			const domParser = new DOMParser();
+			const dom = domParser.parseFromString(html, "text/html");
+			const ogp = Object.fromEntries(
+				Array.from(dom.head.children)
+					.filter(
+						(element) =>
+							element.tagName === "META" &&
+							element.getAttribute("property")?.startsWith("og:"),
+					)
+					.map((element) => [
+						element.getAttribute("property"),
+						element.getAttribute("content"),
+					]),
+			);
+			return ogp as OGPData;
+		} catch (error) {
+			console.error("Error fetching OGP data:", error);
+			return {};
+		}
+	}, []);
+
+	const processLinkCards = useCallback(
+		async (doc: Document) => {
+			const linkCards = Array.from(doc.querySelectorAll(".link-card"));
+			for (const card of linkCards) {
+				const url = card.getAttribute("data-url");
+				if (url) {
+					try {
+						const ogpData = await fetchOGP(url);
+						card.innerHTML = `
+						<a href="${url}" target="_blank" rel="noopener noreferrer" class="link-card-content">
+							<div class="link-card-text">
+								<p>${ogpData["og:title"] || url}</p>
+								<p>${ogpData["og:description"] || ""}</p>
+								<span>${ogpData["og:site_name"] || new URL(url).hostname}</span>
+							</div>
+							${ogpData["og:image"] ? `<div class="link-card-image" style="background-image: url('${ogpData["og:image"]}')"></div>` : ""}
+						</a>
+					`;
+					} catch (error) {
+						console.error("Error processing link card:", error);
+						card.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+					}
+				}
+			}
+		},
+		[fetchOGP],
+	);
 
 	useEffect(() => {
 		const renderMarkdownAndHighlight = async () => {
@@ -54,17 +115,20 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 							const wrapper = document.createElement("div");
 							wrapper.className = "code-block-wrapper";
 							wrapper.innerHTML = `
-                                <div class="code-block-header">
-                                    <span class="code-block-lang">${lang}</span>
-                                    <button class="copy-button" aria-label="Copy code">
-                                        Copy
-                                    </button>
-                                </div>
-                                <div class="code-block-content">${highlightedCode}</div>
-                            `;
+								<div class="code-block-header">
+									<span class="code-block-lang">${lang}</span>
+									<button class="copy-button" aria-label="Copy code">
+										Copy
+									</button>
+								</div>
+								<div class="code-block-content">${highlightedCode}</div>
+							`;
 							codeBlock.parentNode?.replaceChild(wrapper, codeBlock);
 						}
 					}
+
+					// Process link cards
+					await processLinkCards(doc);
 
 					renderedHtml = new XMLSerializer().serializeToString(doc.body);
 					setHtml(renderedHtml);
@@ -78,7 +142,7 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 		};
 
 		renderMarkdownAndHighlight();
-	}, [content, theme, isDarkMode]);
+	}, [content, theme, isDarkMode, processLinkCards]);
 
 	useEffect(() => {
 		const handleCopy = async (event: Event) => {
