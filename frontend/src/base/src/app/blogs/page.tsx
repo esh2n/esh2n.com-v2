@@ -1,4 +1,5 @@
-import { getAllPosts } from "@/lib/bff";
+import { getAllPosts, getTotalPostsCount } from "@/lib/bff";
+import { Suspense } from "react";
 import BlogsWrapper from "./BlogsWrapper";
 
 export const revalidate = 600;
@@ -19,11 +20,32 @@ export interface Post {
 	updatedAt: string;
 }
 
-const Blogs = async () => {
-	const res = await getAllPosts(10, "");
-	const { posts } = res.posts;
+export interface PostsResponse {
+	posts: Post[];
+	nextCursor: string | null;
+}
 
-	return <BlogsWrapper posts={posts} />;
+const POSTS_PER_PAGE = 9; // 3x3 grid
+
+const Blogs = async ({ searchParams }: { searchParams: { page?: string } }) => {
+	const currentPage = searchParams.page
+		? Number.parseInt(searchParams.page)
+		: 1;
+	const res = await getAllPosts(POSTS_PER_PAGE, "");
+	const totalPosts = await getTotalPostsCount();
+	const { posts, nextCursor } = res.posts;
+
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<BlogsWrapper
+				initialPosts={posts}
+				initialNextCursor={nextCursor}
+				currentPage={currentPage}
+				postsPerPage={POSTS_PER_PAGE}
+				totalPosts={totalPosts}
+			/>
+		</Suspense>
+	);
 };
 
 export default Blogs;

@@ -4,6 +4,7 @@ import {
 	getContentBySlug,
 	getPostInfo,
 	getPosts,
+	getTotalPostsCount,
 	initNotion,
 	toMarkdownString,
 } from "./notion";
@@ -39,7 +40,7 @@ const notion = new Hono<{ Bindings: Bindings }>()
 		return next();
 	})
 	.use(
-		"/",
+		"/posts",
 		etag(),
 		cache({
 			cacheName: "notion",
@@ -114,6 +115,10 @@ const notion = new Hono<{ Bindings: Bindings }>()
 			const str = await toMarkdownString(content);
 			return c.json({ content: str, postInfo }, 200);
 		},
-	);
+	)
+	.get("/posts/count", async (c) => {
+		const count = await getTotalPostsCount(c.env.NOTION_DATABASE_ID);
+		return c.json({ count }, 200);
+	});
 
 export { notion };

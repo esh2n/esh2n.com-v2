@@ -23,6 +23,12 @@ interface NotionPost {
 	updatedAt: string;
 }
 
+export async function getTotalPostsCount(databaseId: string): Promise<number> {
+	const response = await notion.databases.query({
+		database_id: databaseId,
+	});
+	return response.results.length;
+}
 export async function getPosts(
 	databaseId: string,
 	pageSize: number,
