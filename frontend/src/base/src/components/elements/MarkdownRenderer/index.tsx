@@ -1,10 +1,8 @@
 "use client";
 
 import { themeState } from "@/atoms/themeState";
-import type { Theme } from "@/types/atoms";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
-
 import "./style.scss";
 import { getShikiTheme } from "@/lib/utils";
 
@@ -19,12 +17,16 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 	const [html, setHtml] = useState<string>("");
 	const { theme, isDarkMode } = useRecoilValue(themeState);
 
+	const shikiTheme = useMemo(
+		() => getShikiTheme(theme, isDarkMode),
+		[theme, isDarkMode],
+	);
+
 	const copyCode = useCallback(async (codeContent: string) => {
 		try {
 			await navigator.clipboard.writeText(codeContent);
 			return true;
 		} catch (err) {
-			console.error("Failed to copy code:", err);
 			return false;
 		}
 	}, []);
@@ -50,7 +52,6 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 			);
 			return ogp as OGPData;
 		} catch (error) {
-			console.error("Error fetching OGP data:", error);
 			return {};
 		}
 	}, []);
@@ -58,91 +59,113 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 	const processLinkCards = useCallback(
 		async (doc: Document) => {
 			const linkCards = Array.from(doc.querySelectorAll(".link-card"));
-			for (const card of linkCards) {
+			const processCard = async (card: Element) => {
 				const url = card.getAttribute("data-url");
 				if (url) {
 					try {
 						const ogpData = await fetchOGP(url);
 						card.innerHTML = `
-						<a href="${url}" target="_blank" rel="noopener noreferrer" class="link-card-content">
-							<div class="link-card-text">
-								<p>${ogpData["og:title"] || url}</p>
-								<p>${ogpData["og:description"] || ""}</p>
-								<span>${ogpData["og:site_name"] || new URL(url).hostname}</span>
-							</div>
-							${ogpData["og:image"] ? `<div class="link-card-image" style="background-image: url('${ogpData["og:image"]}')"></div>` : ""}
-						</a>
-					`;
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="link-card-content">
+                <div class="link-card-text">
+                  <p>${ogpData["og:title"] || url}</p>
+                  <p>${ogpData["og:description"] || ""}</p>
+                  <span>${ogpData["og:site_name"] || new URL(url).hostname}</span>
+                </div>
+                ${ogpData["og:image"] ? `<div class="link-card-image" style="background-image: url('${ogpData["og:image"]}')"></div>` : ""}
+              </a>
+            `;
 					} catch (error) {
 						console.error("Error processing link card:", error);
 						card.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
 					}
 				}
-			}
+			};
+			await Promise.all(linkCards.map(processCard));
 		},
 		[fetchOGP],
 	);
 
 	useEffect(() => {
+		let isMounted = true;
 		const renderMarkdownAndHighlight = async () => {
-			if (content) {
-				try {
-					const { codeToHtml } = await import("shiki");
-					const md2html = await import("@esh2n.com/md2html");
-					let renderedHtml = md2html.render_markdown(content);
+			if (!content) {
+				setHtml("<p>No content available</p>");
+				return;
+			}
 
-					const parser = new DOMParser();
-					const doc = parser.parseFromString(renderedHtml, "text/html");
-					const codeBlocks = Array.from(doc.querySelectorAll("pre code"));
+			try {
+				const [{ codeToHtml }, { render_markdown }] = await Promise.all([
+					import("shiki"),
+					import("@esh2n.com/md2html"),
+				]);
 
-					const shikiTheme = getShikiTheme(theme, isDarkMode);
+				let renderedHtml = render_markdown(content);
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(renderedHtml, "text/html");
 
-					for (const codeBlock of codeBlocks) {
-						const code = codeBlock.textContent;
-						if (code) {
-							const langClass = Array.from(codeBlock.classList).find((cls) =>
-								cls.startsWith("language-"),
-							);
-							const lang = langClass
-								? langClass.replace("language-", "")
-								: "plaintext";
+				const codeBlocks = Array.from(doc.querySelectorAll("pre code"));
+				const highlightPromises = codeBlocks.map(async (codeBlock) => {
+					const code = codeBlock.textContent;
+					if (code) {
+						const langClass = Array.from(codeBlock.classList).find((cls) =>
+							cls.startsWith("language-"),
+						);
+						const lang = langClass
+							? langClass.replace("language-", "")
+							: "plaintext";
 
-							const highlightedCode = await codeToHtml(code, {
-								lang: lang,
-								theme: shikiTheme,
-							});
+						const highlightedCode = await codeToHtml(code, {
+							lang: lang,
+							theme: shikiTheme,
+						});
 
-							const wrapper = document.createElement("div");
-							wrapper.className = "code-block-wrapper";
-							wrapper.innerHTML = `
-								<div class="code-block-header">
-									<span class="code-block-lang">${lang}</span>
-									<button class="copy-button" aria-label="Copy code">
-										Copy
-									</button>
-								</div>
-								<div class="code-block-content">${highlightedCode}</div>
-							`;
-							codeBlock.parentNode?.replaceChild(wrapper, codeBlock);
-						}
+						return { codeBlock, highlightedCode, lang };
 					}
+				});
 
-					// Process link cards
-					await processLinkCards(doc);
+				const highlightResults = (await Promise.all(highlightPromises)).filter(
+					(result): result is NonNullable<typeof result> =>
+						result !== undefined,
+				);
 
-					renderedHtml = new XMLSerializer().serializeToString(doc.body);
+				for (const { codeBlock, highlightedCode, lang } of highlightResults) {
+					if (highlightedCode) {
+						const wrapper = document.createElement("div");
+						wrapper.className = "code-block-wrapper";
+						wrapper.innerHTML = `
+              <div class="code-block-header">
+                <span class="code-block-lang">${lang}</span>
+                <button class="copy-button" aria-label="Copy code">
+                  Copy
+                </button>
+              </div>
+              <div class="code-block-content">${highlightedCode}</div>
+            `;
+						codeBlock.parentNode?.replaceChild(wrapper, codeBlock);
+					}
+				}
+
+				await processLinkCards(doc);
+
+				renderedHtml = new XMLSerializer().serializeToString(doc.body);
+
+				if (isMounted) {
 					setHtml(renderedHtml);
-				} catch (error) {
-					console.error("Error rendering or highlighting markdown:", error);
+				}
+			} catch (error) {
+				console.error("Error rendering or highlighting markdown:", error);
+				if (isMounted) {
 					setHtml("<p>Error rendering content</p>");
 				}
-			} else {
-				setHtml("<p>No content available</p>");
 			}
 		};
 
 		renderMarkdownAndHighlight();
-	}, [content, theme, isDarkMode, processLinkCards]);
+
+		return () => {
+			isMounted = false;
+		};
+	}, [content, shikiTheme, processLinkCards]);
 
 	useEffect(() => {
 		const handleCopy = async (event: Event) => {
