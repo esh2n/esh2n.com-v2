@@ -5,7 +5,9 @@ import { formatDate } from "@/lib/utils";
 export const revalidate = 60;
 export const generateMetadata = async ({
 	params,
-}: { params: { slug: string } }) => {
+}: {
+	params: { slug: string };
+}) => {
 	const post = await getPostStrMDContentBySlug(params.slug);
 	const { title, tags, createdAt } = post.postInfo;
 	const description = post.content.parent
@@ -14,18 +16,26 @@ export const generateMetadata = async ({
 		.trim();
 	const imageURL = "https://avatars.githubusercontent.com/u/55518345?v=4";
 	const BASE_URL = process.env.NEXT_PUBLIC_BFF_URI;
-	const data = `${BASE_URL}api/ogp?pageTitle=esh2n.dev&title=${encodeURIComponent(title)}&date=${new Date(createdAt).toLocaleDateString()}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(imageURL)}&tags=${tags}`;
-	let formattedTitle = title;
-	if (title.length > 25) {
-		formattedTitle = `${title.slice(0, 25)}...`;
-	}
+
+	const ogpParams = new URLSearchParams({
+		pageTitle: "esh2n.dev",
+		title: title,
+		date: new Date(createdAt).toLocaleDateString(),
+		description,
+		image: imageURL,
+		tags: tags.join(","),
+	});
+	const ogpImageUrl = `${BASE_URL}api/ogp?${ogpParams.toString()}`;
+
+	const formattedTitle = title.length > 25 ? `${title.slice(0, 25)}...` : title;
+
 	return {
 		title: formattedTitle,
 		description,
 		openGraph: {
 			images: [
 				{
-					url: data,
+					url: ogpImageUrl,
 					width: 1200,
 					height: 630,
 					alt: title,
@@ -39,6 +49,20 @@ const BlogPage = async ({ params }: { params: { slug: string } }) => {
 	const post = await getPostStrMDContentBySlug(params.slug);
 	const BASE_URL = process.env.NEXT_PUBLIC_BFF_URI;
 
+	// OGP画像URLの生成を最適化
+	const ogpParams = new URLSearchParams({
+		pageTitle: "esh2n.dev",
+		title: post.postInfo.title,
+		date: formatDate(post.postInfo.createdAt),
+		description: post.content.parent
+			.replace(/[#*\[\]()_]/g, "")
+			.slice(0, 100)
+			.trim(),
+		image: "https://avatars.githubusercontent.com/u/55518345?v=4",
+		tags: post.postInfo.tags.join(","),
+	});
+	const ogpImageUrl = `${BASE_URL}api/ogp?${ogpParams.toString()}`;
+
 	const formattedPost = {
 		...post,
 		postInfo: {
@@ -46,12 +70,7 @@ const BlogPage = async ({ params }: { params: { slug: string } }) => {
 			createdAt: formatDate(post.postInfo.createdAt),
 			updatedAt: formatDate(post.postInfo.updatedAt),
 		},
-		ogpImageUrl: `${BASE_URL}api/ogp?pageTitle=esh2n.dev&title=${encodeURIComponent(post.postInfo.title)}&date=${formatDate(post.postInfo.createdAt)}&description=${encodeURIComponent(
-			post.content.parent
-				.replace(/[#*\[\]()_]/g, "")
-				.slice(0, 100)
-				.trim(),
-		)}&image=${encodeURIComponent("https://avatars.githubusercontent.com/u/55518345?v=4")}&tags=${post.postInfo.tags}`,
+		ogpImageUrl,
 	};
 
 	return <BlogWrapper post={formattedPost} />;
