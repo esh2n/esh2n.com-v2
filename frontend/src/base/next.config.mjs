@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const withDebug = process.env.NODE_ENV === "development";
 const nextConfig = {
 	async serverMiddleware(app) {
 		if (process.env.NODE_ENV === "development") {
@@ -16,6 +17,36 @@ const nextConfig = {
 		domains: ["avatars.githubusercontent.com", "bff.esh2n.workers.dev"],
 	},
 	webpack(config, { isServer, dev }) {
+		const MODE =
+			process.env.npm_lifecycle_event === "dev" ? "development" : "production";
+		config.resolve.extensions.push(".elm");
+		if (MODE === "development") {
+			config.module.rules.push({
+				test: /\.elm$/,
+				exclude: [/elm-stuff/, /node_modules/],
+				use: [
+					{ loader: "elm-hot-webpack-loader" },
+					{
+						loader: "elm-webpack-loader",
+						options: {
+							// add Elm's debug overlay to output
+							debug: withDebug,
+						},
+					},
+				],
+			});
+		} else {
+			config.module.rules.push({
+				test: /\.elm$/,
+				exclude: [/elm-stuff/, /node_modules/],
+				use: {
+					loader: "elm-webpack-loader",
+					options: {
+						optimize: true,
+					},
+				},
+			});
+		}
 		config.experiments = {
 			...config.experiments,
 			asyncWebAssembly: true,

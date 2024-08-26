@@ -1,6 +1,6 @@
 {
   "name": "@esh2n.com/bff",
-  "version": "6.0.6",
+  "version": "7.0.0",
   "main": "src/index.tsx",
   "files": [
     "src"

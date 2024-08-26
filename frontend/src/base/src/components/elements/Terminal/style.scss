@@ -1,0 +1,175 @@
+.vscode-terminal-container {
+    margin-left: -0.25rem;
+    border: 1px solid var(--border);
+    padding: 16px;
+    padding-bottom: 8px;
+
+    .vscode-terminal {
+        background-color: var(--background);
+        color: var(--foreground);
+        height: 300px;
+        line-height: 1.2;
+        cursor: text;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .elm-terminal-content {
+        flex-grow: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .terminal-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+
+    .output-line {
+        padding: 1px 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .terminal-input {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 1px 0;
+    }
+
+    .prompt {
+        color: var(--primary);
+        margin-right: 5px;
+        font-weight: bold;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .input-text {
+        font-family: inherit;
+        font-size: inherit;
+        color: var(--foreground);
+        background-color: transparent;
+    }
+
+    .terminal-input input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        opacity: 0;
+        /* 実際の入力を非表示にする */
+        caret-color: transparent;
+    }
+
+    .terminal-input input:focus {
+        outline: none;
+    }
+
+    .cursor {
+        width: 8px;
+        height: 1em;
+    }
+
+    .cursor.focused {
+        background-color: var(--foreground);
+        animation: blink 0.7s steps(2) infinite;
+    }
+
+    /* フォーカスがない場合のカーソル */
+    .cursor.blurred {
+        border: 1px solid var(--foreground);
+        background-color: transparent;
+        animation: none;
+    }
+
+    @keyframes blink {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+    }
+
+    a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .terminal-content::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .terminal-content::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    .terminal-content::-webkit-scrollbar-thumb {
+        background: var(--muted);
+        border-radius: 5px;
+    }
+
+    .terminal-content::-webkit-scrollbar-thumb:hover {
+        background: var(--muted-foreground);
+    }
+
+    .vscode-terminal-loading,
+    .vscode-terminal-error {
+        padding: 10px;
+    }
+
+    #vscode-terminal>div {
+        border: none;
+        height: 100%;
+    }
+
+    .info {
+        color: var(--secondary);
+        font-weight: bold;
+    }
+
+    .command {
+        color: var(--primary);
+        font-weight: normal;
+    }
+
+    .highlight {
+        color: var(--accent);
+        font-style: italic;
+    }
+
+    .link {
+        color: var(--accent);
+        text-decoration: underline;
+    }
+
+    .error {
+        color: var(--destructive);
+        font-weight: bold;
+    }
+
+    .echo {
+        color: var(--foreground);
+    }
+
+    .success {
+        color: var(--primary);
+        font-weight: bold;
+    }
+}

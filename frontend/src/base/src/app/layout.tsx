@@ -1,15 +1,14 @@
-import type { Metadata, Viewport } from "next";
-import { Fira_Code } from "next/font/google";
-import "./globals.scss";
 import AIChat from "@/components/elements/AIChat";
+import Terminal from "@/components/elements/Terminal";
 import Footer from "@/components/layouts/Footer/Footer";
 import Header from "@/components/layouts/Header/Header";
 import IconSideBar from "@/components/layouts/IconSideBar";
 import CombinedSidebar from "@/components/layouts/SideBar";
 import VSCodeTabs from "@/components/layouts/Tab";
+import type { Metadata, Viewport } from "next";
 import RecoilProvider from "./recoilProvider";
 
-const inter = Fira_Code({ subsets: ["latin"] });
+import "./globals.scss";
 export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
@@ -80,7 +79,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ja">
-			<body className={inter.className}>
+			<body id="root">
 				<RecoilProvider>
 					<div className="tw-flex tw-flex-col tw-h-screen tw-overflow-hidden">
 						<Header />
@@ -92,6 +91,7 @@ export default function RootLayout({
 							<div className="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
 								<VSCodeTabs />
 								<main className="tw-flex-1 tw-overflow-auto">{children}</main>
+								<Terminal />
 							</div>
 							<AIChat />
 						</div>

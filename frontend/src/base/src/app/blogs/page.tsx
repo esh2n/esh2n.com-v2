@@ -36,7 +36,7 @@ const Blogs = async ({ searchParams }: { searchParams: { page?: string } }) => {
 	const { posts, nextCursor } = res.posts;
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<div />}>
 			<BlogsWrapper
 				initialPosts={posts}
 				initialNextCursor={nextCursor}

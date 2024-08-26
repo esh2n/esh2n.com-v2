@@ -2,6 +2,7 @@
 
 import Logo from "@/components/elements/Logo";
 import { AnimatePresence, motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa6";
 
