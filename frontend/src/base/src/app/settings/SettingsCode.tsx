@@ -1,5 +1,6 @@
 import { aiChatOpenState } from "@/atoms/aichat";
 import { fontFamilyState } from "@/atoms/fontFamily";
+import { terminalOpenState } from "@/atoms/terminal";
 import { themeState } from "@/atoms/themeState";
 import CodeViewer from "@/components/elements/CodeViewer";
 import React, { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ const SettingsCode = () => {
 	const theme = useRecoilValue(themeState);
 	const fontFamily = useRecoilValue(fontFamilyState);
 	const aiChatOpen = useRecoilValue(aiChatOpenState);
+	const terminalOpen = useRecoilValue(terminalOpenState);
 
 	useEffect(() => {
 		setIsClient(true);
@@ -26,6 +28,7 @@ const SettingsCode = () => {
 		},
 		fontFamily: fontFamily,
 		aiChatOpen: aiChatOpen,
+		terminalOpen: terminalOpen,
 	};
 
 	const jsonContent = JSON.stringify(settingsJson, null, 2);

@@ -2,6 +2,7 @@
 
 import { aiChatOpenState } from "@/atoms/aichat";
 import { fontFamilyState } from "@/atoms/fontFamily";
+import { terminalOpenState } from "@/atoms/terminal";
 import { themeState } from "@/atoms/themeState";
 import {
 	Select,
@@ -12,13 +13,14 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { type Variants, motion } from "framer-motion";
-import { MessageCircle, Moon, Sun, Type } from "lucide-react";
+import { MessageCircle, Moon, Sun, Terminal, Type } from "lucide-react";
 import { useRecoilState } from "recoil";
 
 const SettingsContent: React.FC = () => {
 	const [theme, setTheme] = useRecoilState(themeState);
 	const [fontFamily, setFontFamily] = useRecoilState(fontFamilyState);
 	const [aiChatOpen, setAiChatOpen] = useRecoilState(aiChatOpenState);
+	const [terminalOpen, setTerminalOpen] = useRecoilState(terminalOpenState);
 
 	const handleDarkModeToggle = () => {
 		setTheme({
@@ -46,6 +48,10 @@ const SettingsContent: React.FC = () => {
 
 	const handleAIChatToggle = () => {
 		setAiChatOpen(!aiChatOpen);
+	};
+
+	const handleTerminalToggle = () => {
+		setTerminalOpen(!terminalOpen);
 	};
 
 	const handleFontChange = (newFont: string) => {
@@ -137,6 +143,17 @@ const SettingsContent: React.FC = () => {
 						</SettingCard>
 
 						<SettingCard
+							icon={<Terminal className="tw-h-5 tw-w-5" />}
+							title="Terminal"
+							variants={itemVariants}
+						>
+							<Switch
+								checked={terminalOpen}
+								onCheckedChange={handleTerminalToggle}
+							/>
+						</SettingCard>
+
+						<SettingCard
 							icon={<Type className="tw-h-5 tw-w-5" />}
 							title="Font"
 							variants={itemVariants}
@@ -150,6 +167,7 @@ const SettingsContent: React.FC = () => {
 									sideOffset={5}
 									className="tw-z-50"
 								>
+									<SelectItem value="Fira Code">Fira Code</SelectItem>
 									<SelectItem value="Inter">Inter</SelectItem>
 									<SelectItem value="Roboto">Roboto</SelectItem>
 									<SelectItem value="Open Sans">Open Sans</SelectItem>

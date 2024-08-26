@@ -7,7 +7,7 @@ import type { PostResponseWithOGP } from "./BlogWrapper";
 const MarkdownRenderer = dynamic(
 	() => import("@/components/elements/MarkdownRenderer"),
 	{
-		loading: () => <p>Loading content...</p>,
+		loading: () => <div />,
 	},
 );
 
@@ -35,7 +35,7 @@ const BlogContent = ({ post }: { post: PostResponseWithOGP }) => {
 				<link rel="preload" href={ogpImageUrl} as="image" />
 			</Head>
 			<div className="tw-max-w-4xl tw-mx-auto tw-px-4 tw-py-8">
-				<Suspense fallback={<div>Loading metadata...</div>}>
+				<Suspense fallback={<div />}>
 					<BlogMeta {...post.postInfo} renderedTags={memoizedTags} />
 				</Suspense>
 				<div className="tw-mb-8 tw-rounded-lg tw-overflow-hidden tw-shadow-xl tw-max-w-2xl tw-mx-auto">
